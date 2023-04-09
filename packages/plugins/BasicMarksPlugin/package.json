@@ -1,0 +1,19 @@
+{
+  "name": "@week/basic-marks-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "slate": "^0.93.0"
+  },
+  "dependencies": {
+    "escape-html": "^1.0.3",
+    "slate-hyperscript": "^0.77.0"
+  }
+}

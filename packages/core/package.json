@@ -9,10 +9,21 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@week/dnd-plugin": "workspace:^1.0.0"
+    "@week/basic-marks-plugin": "workspace:^1.0.0",
+    "@week/dnd-plugin": "workspace:^1.0.0",
+    "@week/node-id-plugin": "workspace:^1.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "slate": "^0.93.0",
+    "slate-react": "^0.93.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "slate": "^0.93.0",
+    "slate-react": "^0.93.0"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "is-hotkey": "^0.2.0"
   }
 }

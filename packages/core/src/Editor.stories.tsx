@@ -2,6 +2,7 @@ import {useState} from 'react';
 import { WeekEditor } from './WeekEditor';
 import { DnDPlugin } from '@week/dnd-plugin';
 import { NodeIdPlugin } from '@week/node-id-plugin';
+import { BasicMarksPlugin } from '@week/basic-marks-plugin'
 
 const initialValue = [
   {
@@ -34,6 +35,7 @@ export const Primary = {
   render: () => {
     const [value, setValue] = useState(initialValue);
     const plugins = [
+      new BasicMarksPlugin(),
       new DnDPlugin()
     ];
 

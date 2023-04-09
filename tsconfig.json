@@ -120,6 +120,9 @@
     },
     {
       "path": "packages/plugins/NodeIdPlugin"
+    },
+    {
+      "path": "packages/plugins/BasicMarksPlugin"
     }
   ],
   "exclude": ["node_modules"],
