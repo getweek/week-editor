@@ -1,11 +1,104 @@
-import { Editor } from 'slate';
-import { RenderElementProps } from 'slate-react';
+import { useRef, useState, useEffect } from 'react';
+import { ReactEditor, RenderElementProps } from 'slate-react';
+import { DndProvider, useDrag, useDrop, XYCoord } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Reorder } from 'framer-motion';
+import { Editor, Element, Transforms } from 'slate';
+import styles from './styles.module.css';
 
 export class DnDPlugin {
-  renderElement(props: RenderElementProps, editor: Editor) {
+  editor: ReactEditor | null = null;
+  items: any[] = [];
+
+  init(editor: ReactEditor) {
+    this.editor = editor;
+    this.items = editor.children.map((child) => child.id);
+
+    return editor;
+  }
+
+  handlers = {
+    onDrop(event) {
+      event.preventDefault();
+    },
+  };
+
+  renderContext(children: React.ReactNode) {
+    return <DndProvider backend={HTML5Backend}>{children}</DndProvider>;
+  }
+
+  renderElement(props: RenderElementProps, editor: ReactEditor) {
+    const ref = useRef(null);
+    const [height, setHeight] = useState(0);
+
+    const [dropped, drag, preview] = useDrag({
+      type: 'TEXT_BLOCK',
+      item: {
+        id: props.element.id,
+        location: ReactEditor.findPath(editor, props.element),
+      },
+      collect(monitor) {
+        return {
+          box: ref.current?.getBoundingClientRect(),
+          isDragging: monitor.isDragging(),
+        };
+      },
+    });
+
+    const [collected, drop] = useDrop({
+      accept: 'TEXT_BLOCK',
+      hover(item, monitor) {
+        const { box } = dropped;
+
+        const hoveredBox = ref.current?.getBoundingClientRect();
+        const hoverMiddleY = (hoveredBox.bottom - hoveredBox.top) / 2;
+
+        const clientOffset = monitor.getClientOffset();
+        const hoverClientY = (clientOffset as XYCoord).y - hoveredBox.top;
+
+        if (hoverClientY < hoverMiddleY) {
+          setHeight(box.height);
+        } else {
+          setHeight(-box.height);
+        }
+      },
+      drop(item, monitor) {
+        const { location } = item;
+        const path = ReactEditor.findPath(editor, props.element);
+
+        Transforms.moveNodes(editor, {
+          at: location,
+          to: path,
+
+          match: (node) => Editor.isEditor(editor) && Element.isElement(node),
+        });
+      },
+      collect(monitor: any) {
+        return {
+          isOver: monitor.isOver(),
+          box: ref.current?.getBoundingClientRect(),
+        };
+      },
+    });
+
+    const { isDragging } = dropped;
+    const { isOver } = collected;
+
+    preview(drop(ref));
+
     return (
-      <div>
-        <span>drag me</span>
+      <div
+        ref={ref}
+        draggable
+        className={styles.block}
+        style={{
+          paddingTop: isOver ? height : undefined,
+          opacity: isDragging ? 0 : 1,
+        }}
+      >
+        <span ref={drag} contentEditable={false} style={{ marginRight: 5 }}>
+          ⠿
+        </span>
         {props.children}
       </div>
     );

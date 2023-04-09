@@ -26,12 +26,15 @@
     "@storybook/addon-links": "^7.0.2",
     "@storybook/addon-mdx-gfm": "^7.0.2",
     "@storybook/blocks": "^7.0.2",
+    "@storybook/builder-vite": "^7.0.2",
     "@storybook/react": "^7.0.2",
+    "@storybook/react-vite": "^7.0.2",
     "@storybook/react-webpack5": "^7.0.2",
     "@storybook/testing-library": "^0.0.14-next.2",
     "prettier": "^2.8.7",
     "prop-types": "^15.8.1",
     "storybook": "^7.0.2",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "vite": "^4.2.1"
   }
 }

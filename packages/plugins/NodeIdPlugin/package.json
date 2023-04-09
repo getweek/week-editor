@@ -1,18 +1,15 @@
 {
-  "name": "core",
+  "name": "@week/node-id-plugin",
   "version": "1.0.0",
   "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@week/dnd-plugin": "workspace:^1.0.0"
-  },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "nanoid": "^4.0.2"
   }
 }
