@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { Editor } from 'slate';
-import { RenderLeafProps } from 'slate-react';
+import { ReactEditor, RenderLeafProps } from 'slate-react';
 
 export interface IShortcuts {
   shortcuts: Shortcut[];
@@ -12,6 +12,12 @@ export interface IHotkeys {
 
 export interface ILeaf {
   renderLeaf: (props: RenderLeafProps) => ReactNode;
+}
+
+export interface IHandlers {
+  handlers: Partial<Pick<React.TextareaHTMLAttributes<HTMLDivElement>, 
+    'onKeyDown'
+  >>;
 }
 
 export interface ISerializable {

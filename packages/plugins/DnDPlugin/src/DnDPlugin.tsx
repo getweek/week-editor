@@ -48,19 +48,7 @@ export class DnDPlugin {
     const [collected, drop] = useDrop({
       accept: 'TEXT_BLOCK',
       hover(item, monitor) {
-        const { box } = dropped;
-
-        const hoveredBox = ref.current?.getBoundingClientRect();
-        const hoverMiddleY = (hoveredBox.bottom - hoveredBox.top) / 2;
-
-        const clientOffset = monitor.getClientOffset();
-        const hoverClientY = (clientOffset as XYCoord).y - hoveredBox.top;
-
-        if (hoverClientY < hoverMiddleY) {
-          setHeight(box.height);
-        } else {
-          setHeight(-box.height);
-        }
+        setHeight(24);
       },
       drop(item, monitor) {
         const { location } = item;
@@ -92,11 +80,11 @@ export class DnDPlugin {
         draggable
         className={styles.block}
         style={{
-          paddingTop: isOver ? height : undefined,
+          paddingBottom: isOver ? height : undefined,
           opacity: isDragging ? 0 : 1,
         }}
       >
-        <span ref={drag} contentEditable={false} style={{ marginRight: 5 }}>
+        <span ref={drag} contentEditable={false} className={styles.handler}>
           ⠿
         </span>
         {props.children}

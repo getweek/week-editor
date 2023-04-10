@@ -58,6 +58,7 @@ importers:
       '@week/basic-marks-plugin': workspace:^1.0.0
       '@week/dnd-plugin': workspace:^1.0.0
       '@week/node-id-plugin': workspace:^1.0.0
+      '@week/soft-break-plugin': workspace:^1.0.0
       is-hotkey: ^0.2.0
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -69,6 +70,7 @@ importers:
       '@week/basic-marks-plugin': link:../plugins/BasicMarksPlugin
       '@week/dnd-plugin': link:../plugins/DnDPlugin
       '@week/node-id-plugin': link:../plugins/NodeIdPlugin
+      '@week/soft-break-plugin': link:../plugins/SoftBreakPlugin
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       slate: 0.93.0
@@ -106,6 +108,9 @@ importers:
       nanoid: ^4.0.2
     dependencies:
       nanoid: 4.0.2
+
+  packages/plugins/SoftBreakPlugin:
+    specifiers: {}
 
 packages:
 

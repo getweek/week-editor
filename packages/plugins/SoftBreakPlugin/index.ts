@@ -1,0 +1,1 @@
+export { SoftBreakPlugin } from './src/SoftBreakPlugin';

@@ -1,3 +1,17 @@
 .block {
+  position: relative;
   transition: padding ease-out 250ms;
+  padding-left: 16px;
+}
+
+.handler {
+  position: absolute;
+  cursor: move;
+  left: 0;
+  transition: opacity ease-out 250ms;
+  opacity: 0;
+}
+
+.block:hover .handler {
+  opacity: .3;
 }

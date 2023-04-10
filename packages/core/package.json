@@ -12,6 +12,7 @@
     "@week/basic-marks-plugin": "workspace:^1.0.0",
     "@week/dnd-plugin": "workspace:^1.0.0",
     "@week/node-id-plugin": "workspace:^1.0.0",
+    "@week/soft-break-plugin": "workspace:^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "slate": "^0.93.0",
