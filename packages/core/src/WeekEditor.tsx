@@ -2,13 +2,20 @@ import React, {
   useState,
   useCallback,
   useEffect,
+  useMemo,
   ReactNode,
   KeyboardEvent,
   isValidElement,
 } from 'react';
 import { createEditor, Descendant } from 'slate';
 import { withHistory } from 'slate-history';
-import { Editable, Slate, withReact, RenderElementProps, RenderLeafProps } from 'slate-react';
+import {
+  Editable,
+  Slate,
+  withReact,
+  RenderElementProps,
+  RenderLeafProps,
+} from 'slate-react';
 import { withShortcuts } from './plugins/withShortcuts';
 import { isHotkey } from 'is-hotkey';
 
@@ -73,7 +80,7 @@ export const WeekEditor = (props: Props) => {
 
       return <span {...props} />;
     };
-    
+
     const handlers = plugins.reduce((prev, plugin) => {
       if (plugin.handlers) {
         for (const handler in plugin.handlers) {
@@ -122,17 +129,19 @@ export const WeekEditor = (props: Props) => {
         return <>{current.renderContext(children)}</>;
       }, <>{children}</>);
     },
-    [plugins, editor]
+    [plugins]
   );
+
+  const ui = useMemo(() => {
+    return plugins
+      .filter((p) => Boolean(p.ui))
+      .map((p) => <React.Fragment>{p.ui({ readOnly })}</React.Fragment>);
+  }, [plugins]);
 
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
+      {ui}
       <Context>
-        {plugins
-          .filter((p) => Boolean(p.ui))
-          .map((p) => (
-            <React.Fragment>{p.ui({ readOnly })}</React.Fragment>
-          ))}
         <SlateEditable />
       </Context>
     </Slate>

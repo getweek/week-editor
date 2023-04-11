@@ -7,9 +7,66 @@ import {
   toggleBold,
   toggleItalic,
   toggleUnderline,
+  isMarkActive,
+  MarkType,
 } from '@week/basic-marks-plugin';
 import { SoftBreakPlugin } from '@week/soft-break-plugin';
 import { FloatingUiPlugin } from '@week/floating-ui-plugin';
+
+const boldIcon = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    stroke-width="1.25"
+    stroke="currentColor"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z"></path>
+    <path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"></path>
+  </svg>
+);
+
+const italicIcon = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    stroke-width="1.25"
+    stroke="currentColor"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M11 5l6 0"></path>
+    <path d="M7 19l6 0"></path>
+    <path d="M14 5l-4 14"></path>
+  </svg>
+);
+
+const underlineIcon = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    stroke-width="1.25"
+    stroke="currentColor"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M7 5v5a5 5 0 0 0 10 0v-5"></path>
+    <path d="M5 19h14"></path>
+  </svg>
+);
 
 const initialValue = [
   {
@@ -49,12 +106,34 @@ export const Primary = {
         buttons: [
           (editor) => {
             return {
-              icon: <span>b</span>,
+              icon: <>{boldIcon}</>,
               isActive() {
-                return true;
+                return isMarkActive(editor, MarkType.BOLD);
               },
               onClick() {
                 toggleBold(null, editor);
+              },
+            };
+          },
+          (editor) => {
+            return {
+              icon: <>{italicIcon}</>,
+              isActive() {
+                return isMarkActive(editor, MarkType.ITALIC);
+              },
+              onClick() {
+                toggleItalic(null, editor);
+              },
+            };
+          },
+          (editor) => {
+            return {
+              icon: <>{underlineIcon}</>,
+              isActive() {
+                return isMarkActive(editor, MarkType.UNDERLINE);
+              },
+              onClick() {
+                toggleUnderline(null, editor);
               },
             };
           },

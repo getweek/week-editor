@@ -15,6 +15,10 @@ export const Menu = ({ options }: { options: Options }) => {
   const isFocused = useFocused();
 
   useEffect(() => {
+    console.log(style);
+  }, [style]);
+
+  useEffect(() => {
     const element = ref.current;
     const { selection } = editor;
 
@@ -36,22 +40,27 @@ export const Menu = ({ options }: { options: Options }) => {
     const domRange = domSelection?.getRangeAt(0);
     const rect = domRange?.getBoundingClientRect();
 
-    if (!rect) {
-      setStyle(undefined);
-      return;
-    }
-
     setStyle({
       opacity: 1,
-      top: `${rect.top + window.scrollY - element.offsetHeight}px`,
+      top: `${(rect?.top || 0) + window.scrollY - element.offsetHeight}px`,
       left: `${
-        rect.left + window.scrollX - element.offsetWidth / 2 + rect.width / 2
+        (rect?.left || 0) +
+        window.scrollX -
+        element.offsetWidth / 2 +
+        (rect?.width || 0) / 2
       }px`,
     });
   }, [selection]);
 
   return createPortal(
-    <div ref={ref} style={style} className={styles.menu}>
+    <div
+      ref={ref}
+      style={style}
+      className={styles.menu}
+      onMouseDown={(event) => {
+        event.preventDefault();
+      }}
+    >
       {options.buttons?.map((buttonFn, index) => {
         const button = buttonFn(editor);
 
@@ -61,7 +70,9 @@ export const Menu = ({ options }: { options: Options }) => {
             className={cn(styles.button, {
               [styles.active]: button.isActive(),
             })}
-            onMouseDown={button.onClick}
+            onClick={() => {
+              button.onClick();
+            }}
           >
             {button.icon}
           </span>

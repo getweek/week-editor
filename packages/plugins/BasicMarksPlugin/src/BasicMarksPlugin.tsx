@@ -172,15 +172,15 @@ export class BasicMarksPlugin
   }
 }
 
-export const toggleBold = (event: Event, editor: Editor) => {
+export const toggleBold = (event: any, editor: Editor) => {
   toggleMark(editor, MarkType.BOLD);
 };
 
-export const toggleItalic = (event: Event, editor: Editor) => {
+export const toggleItalic = (event: any, editor: Editor) => {
   toggleMark(editor, MarkType.ITALIC);
 };
 
-export const toggleUnderline = (event: Event, editor: Editor) => {
+export const toggleUnderline = (event: any, editor: Editor) => {
   toggleMark(editor, MarkType.UNDERLINE);
 };
 
