@@ -30,6 +30,7 @@ export class DnDPlugin {
   renderElement(props: RenderElementProps, editor: ReactEditor) {
     const ref = useRef(null);
     const [height, setHeight] = useState(0);
+    const [direction, setDirection] = useState(0);
 
     const [dropped, drag, preview] = useDrag({
       type: 'TEXT_BLOCK',
@@ -48,6 +49,17 @@ export class DnDPlugin {
     const [collected, drop] = useDrop({
       accept: 'TEXT_BLOCK',
       hover(item, monitor) {
+        const { y } = monitor.getClientOffset() as XYCoord;
+        const middleY = (dropped.box.bottom - dropped.box.top) / 2;
+
+        const hoverClientY = y - dropped.box.top;
+
+        if (hoverClientY < middleY) {
+          setDirection(-1);
+        } else {
+          setDirection(1);
+        }
+        
         setHeight(24);
       },
       drop(item, monitor) {
@@ -80,7 +92,8 @@ export class DnDPlugin {
         draggable
         className={styles.block}
         style={{
-          paddingBottom: isOver ? height : undefined,
+          paddingTop: isOver && direction === -1 ? height : undefined,
+          paddingBottom: isOver && direction === 1 ? height : undefined,
           opacity: isDragging ? 0 : 1,
         }}
       >
