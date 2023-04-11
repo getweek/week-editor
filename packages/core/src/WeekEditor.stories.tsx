@@ -1,9 +1,15 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import { WeekEditor } from './WeekEditor';
 import { DnDPlugin } from '@week/dnd-plugin';
 import { NodeIdPlugin } from '@week/node-id-plugin';
-import { BasicMarksPlugin } from '@week/basic-marks-plugin';
+import {
+  BasicMarksPlugin,
+  toggleBold,
+  toggleItalic,
+  toggleUnderline,
+} from '@week/basic-marks-plugin';
 import { SoftBreakPlugin } from '@week/soft-break-plugin';
+import { FloatingUiPlugin } from '@week/floating-ui-plugin';
 
 const initialValue = [
   {
@@ -39,6 +45,21 @@ export const Primary = {
       new BasicMarksPlugin(),
       new DnDPlugin(),
       new SoftBreakPlugin(),
+      new FloatingUiPlugin({
+        buttons: [
+          (editor) => {
+            return {
+              icon: <span>b</span>,
+              isActive() {
+                return true;
+              },
+              onClick() {
+                toggleBold(null, editor);
+              },
+            };
+          },
+        ],
+      }),
     ];
 
     return <WeekEditor plugins={plugins} value={value} onChange={setValue} />;

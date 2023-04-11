@@ -128,6 +128,11 @@ export const WeekEditor = (props: Props) => {
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
       <Context>
+        {plugins
+          .filter((p) => Boolean(p.ui))
+          .map((p) => (
+            <React.Fragment>{p.ui({ readOnly })}</React.Fragment>
+          ))}
         <SlateEditable />
       </Context>
     </Slate>

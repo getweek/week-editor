@@ -15,9 +15,13 @@ export interface ILeaf {
 }
 
 export interface IHandlers {
-  handlers: Partial<Pick<React.TextareaHTMLAttributes<HTMLDivElement>, 
-    'onKeyDown'
-  >>;
+  handlers: Partial<
+    Pick<React.TextareaHTMLAttributes<HTMLDivElement>, 'onKeyDown'>
+  >;
+}
+
+export interface IUi {
+  ui: (params: UiParams) => ReactNode;
 }
 
 export interface ISerializable {
@@ -42,3 +46,7 @@ type Shortcut = {
 };
 
 type Hotkey = readonly [string, (event: KeyboardEvent, editor: Editor) => void];
+
+type UiParams = {
+  readOnly: boolean;
+};

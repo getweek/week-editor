@@ -1,0 +1,17 @@
+.menu {
+  position: absolute;
+  z-index: 10;
+  top: -100000px;
+  left: -100000px;
+  opacity: 0;
+  margin-top: -6px;
+  background-color: #444;
+  border-radius: 4px;
+  transition: opacity 0.5s;
+  color: #fff;
+}
+
+.button {
+  padding: 2px 4px;
+  cursor: pointer;
+}

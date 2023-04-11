@@ -35,7 +35,6 @@ export class DnDPlugin {
     const [dropped, drag, preview] = useDrag({
       type: 'TEXT_BLOCK',
       item: {
-        id: props.element.id,
         location: ReactEditor.findPath(editor, props.element),
       },
       collect(monitor) {
@@ -92,8 +91,10 @@ export class DnDPlugin {
         draggable
         className={styles.block}
         style={{
-          paddingTop: isOver && direction === -1 ? height : undefined,
-          paddingBottom: isOver && direction === 1 ? height : undefined,
+          // paddingTop: isOver && direction === -1 ? height : undefined,
+          // paddingBottom: isOver && direction === 1 ? height : undefined,
+          borderTop: isOver && direction === -1 ? '2px solid blue' : undefined,
+          borderBottom: isOver && direction === 1 ? '2px solid blue' : undefined,
           opacity: isDragging ? 0 : 1,
         }}
       >

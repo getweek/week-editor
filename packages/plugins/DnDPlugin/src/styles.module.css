@@ -1,6 +1,5 @@
 .block {
   position: relative;
-  transition: padding ease-out 250ms;
   padding-left: 16px;
 }
 

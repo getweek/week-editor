@@ -1,0 +1,1 @@
+export { FloatingUiPlugin } from './src/FloatingUiPlugin';
