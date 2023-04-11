@@ -42,6 +42,7 @@ export const Menu = ({ options }: { options: Options }) => {
 
     setStyle({
       opacity: 1,
+      transform: 'scale(1)',
       top: `${(rect?.top || 0) + window.scrollY - element.offsetHeight}px`,
       left: `${
         (rect?.left || 0) +

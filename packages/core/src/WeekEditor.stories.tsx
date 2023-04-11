@@ -12,6 +12,7 @@ import {
 } from '@week/basic-marks-plugin';
 import { SoftBreakPlugin } from '@week/soft-break-plugin';
 import { FloatingUiPlugin } from '@week/floating-ui-plugin';
+import { Editor } from 'slate';
 
 const boldIcon = (
   <svg
@@ -91,6 +92,44 @@ const initialValue = [
   },
 ];
 
+const floatingUiOptions = {
+  buttons: [
+    (editor: Editor) => {
+      return {
+        icon: <>{boldIcon}</>,
+        isActive() {
+          return isMarkActive(editor, MarkType.BOLD);
+        },
+        onClick() {
+          toggleBold(null, editor);
+        },
+      };
+    },
+    (editor: Editor) => {
+      return {
+        icon: <>{italicIcon}</>,
+        isActive() {
+          return isMarkActive(editor, MarkType.ITALIC);
+        },
+        onClick() {
+          toggleItalic(null, editor);
+        },
+      };
+    },
+    (editor: Editor) => {
+      return {
+        icon: <>{underlineIcon}</>,
+        isActive() {
+          return isMarkActive(editor, MarkType.UNDERLINE);
+        },
+        onClick() {
+          toggleUnderline(null, editor);
+        },
+      };
+    },
+  ],
+};
+
 export default {
   title: 'WeekEditor',
   component: WeekEditor,
@@ -102,43 +141,7 @@ export const Primary = {
       new BasicMarksPlugin(),
       new DnDPlugin(),
       new SoftBreakPlugin(),
-      new FloatingUiPlugin({
-        buttons: [
-          (editor) => {
-            return {
-              icon: <>{boldIcon}</>,
-              isActive() {
-                return isMarkActive(editor, MarkType.BOLD);
-              },
-              onClick() {
-                toggleBold(null, editor);
-              },
-            };
-          },
-          (editor) => {
-            return {
-              icon: <>{italicIcon}</>,
-              isActive() {
-                return isMarkActive(editor, MarkType.ITALIC);
-              },
-              onClick() {
-                toggleItalic(null, editor);
-              },
-            };
-          },
-          (editor) => {
-            return {
-              icon: <>{underlineIcon}</>,
-              isActive() {
-                return isMarkActive(editor, MarkType.UNDERLINE);
-              },
-              onClick() {
-                toggleUnderline(null, editor);
-              },
-            };
-          },
-        ],
-      }),
+      new FloatingUiPlugin(floatingUiOptions),
     ];
 
     return <WeekEditor plugins={plugins} value={value} onChange={setValue} />;
