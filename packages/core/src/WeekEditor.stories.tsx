@@ -11,12 +11,14 @@ import { DnDPlugin } from '@week/dnd-plugin';
 import { FloatingUiPlugin, useMenuState } from '@week/floating-ui-plugin';
 import { LinksPlugin, useLinksState } from '@week/links-plugin';
 import { SoftBreakPlugin } from '@week/soft-break-plugin';
+import { HeadingsPlugin } from '@week/headings-plugin';
+import { ListsPlugin, ListType } from '@week/lists-plugin';
 import { useMemo, useState } from 'react';
 import { Editor, Descendant, Range } from 'slate';
 import { WeekEditor } from './WeekEditor';
+import { useFocused } from 'slate-react';
 
 import styles from './styles.module.css';
-import { useFocused } from 'slate-react';
 
 const boldIcon = (
   <svg
@@ -118,7 +120,7 @@ const initialValue = [
 const floatingUiOptions = {
   content: (editor: Editor) => {
     const openLink = useLinksState((state) => state.open);
-    const close = useMenuState(state => state.close);
+    const close = useMenuState((state) => state.close);
     const isFocused = useFocused();
 
     return (
@@ -187,13 +189,20 @@ export const Primary = {
   render: () => {
     const [value, setValue] = useState<Descendant[]>(initialValue);
 
-    const plugins = useMemo(() => [
-      new BasicMarksPlugin(),
-      new SoftBreakPlugin(),
-      new FloatingUiPlugin(floatingUiOptions),
-      new LinksPlugin(),
-      new DnDPlugin(),
-    ], []);
+    const plugins = useMemo(
+      () => [
+        new BasicMarksPlugin(),
+        new SoftBreakPlugin(),
+        new FloatingUiPlugin(floatingUiOptions),
+        new LinksPlugin(),
+        new HeadingsPlugin(),
+        new ListsPlugin(),
+        new DnDPlugin({
+          ignore: [ListType.BULLETED_LIST, ListType.NUMBERED_LIST],
+        }),
+      ],
+      []
+    );
 
     return <WeekEditor plugins={plugins} value={value} onChange={setValue} />;
   },

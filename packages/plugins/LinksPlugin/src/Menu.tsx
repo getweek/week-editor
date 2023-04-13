@@ -2,8 +2,8 @@ import { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Editor, Element, Range, Transforms } from 'slate';
 import { useSlateStatic, useFocused, useSlateSelection } from 'slate-react';
-import styles from './styles.module.css';
 import { ELEMENT_LINK } from './types';
+import styles from './styles.module.css';
 
 const checkIcon = (
   <svg

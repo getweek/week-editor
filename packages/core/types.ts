@@ -2,38 +2,20 @@ import React, { ReactNode } from 'react';
 import { Editor } from 'slate';
 import { ReactEditor, RenderElementProps, RenderLeafProps } from 'slate-react';
 
-export interface IShortcuts {
-  shortcuts: Shortcut[];
-}
-
-export interface IHotkeys {
-  hotkeys: Hotkey[];
-}
-
-export interface IElement {
-  renderElement: (props: RenderElementProps) => ReactNode;
-}
-
-export interface ILeaf {
-  renderLeaf: (props: RenderLeafProps) => ReactNode;
-}
-
-export interface IHandlers {
-  handlers: Partial<
-    Pick<React.TextareaHTMLAttributes<HTMLDivElement>, 'onKeyDown'>
-  >;
-}
-
-export interface IUi {
-  ui: (params: UiParams) => ReactNode;
-}
-
-export interface ISerializable {
+export interface IPlugin {
+  renderLeaf?: (props: RenderLeafProps) => ReactNode;
+  renderElement?: (props: RenderElementProps) => ReactNode;
+  shortcuts?: Shortcut[];
+  hotkeys?: Hotkey[];
   serialize?(
     node: Element | Text | Element[] | Text[],
-    serialize: ISerializable['serialize']
+    serialize: IPlugin['serialize']
   ): string | void;
   deserialize?(element: any, children: any): any;
+  ui?: (params: UiParams) => ReactNode;
+  handlers?: Partial<
+    Pick<React.TextareaHTMLAttributes<HTMLDivElement>, 'onKeyDown'>
+  >;
 }
 
 type Shortcut = {

@@ -5,9 +5,22 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Editor, Element, Transforms } from 'slate';
 import styles from './styles.module.css';
 
+type DnDPluginOptions = {
+  ignore: Array<string>;
+};
 export class DnDPlugin {
   editor: ReactEditor | null = null;
   items: any[] = [];
+  options: DnDPluginOptions = {
+    ignore: [],
+  };
+
+  constructor(options?: DnDPluginOptions) {
+    this.options = {
+      ...this.options,
+      ...options,
+    };
+  }
 
   init(editor: ReactEditor) {
     this.editor = editor;
@@ -56,7 +69,7 @@ export class DnDPlugin {
         } else {
           setDirection(1);
         }
-        
+
         setHeight(24);
       },
       drop(item, monitor) {
@@ -83,7 +96,10 @@ export class DnDPlugin {
 
     preview(drop(ref));
 
-    if (editor.isInline(props.element)) {
+    if (
+      editor.isInline(props.element) ||
+      this.options.ignore.includes(props.element.type)
+    ) {
       return props.children;
     }
 
@@ -96,7 +112,8 @@ export class DnDPlugin {
           // paddingTop: isOver && direction === -1 ? height : undefined,
           // paddingBottom: isOver && direction === 1 ? height : undefined,
           borderTop: isOver && direction === -1 ? '2px solid blue' : undefined,
-          borderBottom: isOver && direction === 1 ? '2px solid blue' : undefined,
+          borderBottom:
+            isOver && direction === 1 ? '2px solid blue' : undefined,
           opacity: isDragging ? 0 : 1,
         }}
       >
