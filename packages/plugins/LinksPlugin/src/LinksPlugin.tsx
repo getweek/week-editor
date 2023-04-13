@@ -45,5 +45,7 @@ export class LinksPlugin implements IUi, IElement {
     editor.isInline = (element) => {
       return element.type === ELEMENT_LINK || isInline(element);
     };
+
+    return editor;
   }
 }

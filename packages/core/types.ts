@@ -3,6 +3,7 @@ import { Editor } from 'slate';
 import { ReactEditor, RenderElementProps, RenderLeafProps } from 'slate-react';
 
 export interface IPlugin {
+  init?: (editor: Editor) => Editor;
   renderLeaf?: (props: RenderLeafProps) => ReactNode;
   renderElement?: (props: RenderElementProps) => ReactNode;
   shortcuts?: Shortcut[];

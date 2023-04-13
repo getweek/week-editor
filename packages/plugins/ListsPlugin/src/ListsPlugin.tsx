@@ -1,9 +1,36 @@
 import { IPlugin } from '../../../core/types';
-import { Editor, Transforms } from 'slate';
+import { Editor, Transforms, Node } from 'slate';
 import { RenderElementProps } from 'slate-react';
 import { ListType } from './types';
+import styles from './styles.module.css';
 
 export class ListsPlugin implements IPlugin {
+  init(editor) {
+    const { normalizeNode } = editor;
+
+    editor.normalizeNode = (entry) => {
+      const [node, path] = entry;
+
+      if (isList(editor, node)) {
+        /* Unwrap lists around non-list-items */
+        for (const [child, childPath] of Node.children(editor, path)) {
+          if (!isListItem(editor, child) && !isList(editor, child)) {
+            Transforms.unwrapNodes(editor, {
+              at: childPath,
+              match: (n) => isList(editor, n),
+              split: true,
+            });
+            return;
+          }
+        }
+      }
+
+      normalizeNode(entry);
+    };
+
+    return editor;
+  }
+
   renderElement(props: RenderElementProps) {
     const { element, attributes, children } = props;
 
@@ -13,7 +40,11 @@ export class ListsPlugin implements IPlugin {
       case ListType.NUMBERED_LIST:
         return <ol {...attributes}>{children}</ol>;
       case ListType.LIST_ITEM:
-        return <li {...attributes}>{children}</li>;
+        return (
+          <li className={styles.listItem} {...attributes}>
+            {children}
+          </li>
+        );
     }
   }
   shortcuts = [
@@ -57,3 +88,14 @@ const turnInto = (type: ListType) => (editor: Editor, match) => {
     );
   });
 };
+
+const LIST_TYPES = [ListType.BULLETED_LIST, ListType.NUMBERED_LIST];
+
+const LIST_ITEMS = [ListType.LIST_ITEM];
+
+const isList = (editor: Editor, node: Node): node is Element =>
+  Editor.isBlock(editor, node) && LIST_TYPES.includes(node.type);
+
+export const isListItem = (editor: Editor, node: Node): node is Element =>
+  Editor.isBlock(editor, node) && LIST_ITEMS.includes(node.type);
+
