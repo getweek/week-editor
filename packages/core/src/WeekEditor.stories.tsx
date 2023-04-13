@@ -1,24 +1,28 @@
-import { useState } from 'react';
-import { WeekEditor } from './WeekEditor';
-import { DnDPlugin } from '@week/dnd-plugin';
-import { NodeIdPlugin } from '@week/node-id-plugin';
 import {
   BasicMarksPlugin,
+  isMarkActive,
+  MarkType,
   toggleBold,
   toggleItalic,
   toggleUnderline,
-  isMarkActive,
-  MarkType,
 } from '@week/basic-marks-plugin';
+import cn from 'classnames';
+import { DnDPlugin } from '@week/dnd-plugin';
+import { FloatingUiPlugin, useMenuState } from '@week/floating-ui-plugin';
+import { LinksPlugin, useLinksState } from '@week/links-plugin';
 import { SoftBreakPlugin } from '@week/soft-break-plugin';
-import { FloatingUiPlugin } from '@week/floating-ui-plugin';
-import { Editor } from 'slate';
+import { useMemo, useState } from 'react';
+import { Editor, Descendant, Range } from 'slate';
+import { WeekEditor } from './WeekEditor';
+
+import styles from './styles.module.css';
+import { useFocused } from 'slate-react';
 
 const boldIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     stroke-width="1.25"
     stroke="currentColor"
@@ -35,8 +39,8 @@ const boldIcon = (
 const italicIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     stroke-width="1.25"
     stroke="currentColor"
@@ -54,8 +58,8 @@ const italicIcon = (
 const underlineIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     stroke-width="1.25"
     stroke="currentColor"
@@ -66,6 +70,25 @@ const underlineIcon = (
     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
     <path d="M7 5v5a5 5 0 0 0 10 0v-5"></path>
     <path d="M5 19h14"></path>
+  </svg>
+);
+
+const linkIcon = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    stroke-width="1.25"
+    stroke="currentColor"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M9 15l6 -6"></path>
+    <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"></path>
+    <path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"></path>
   </svg>
 );
 
@@ -93,41 +116,67 @@ const initialValue = [
 ];
 
 const floatingUiOptions = {
-  buttons: [
-    (editor: Editor) => {
-      return {
-        icon: <>{boldIcon}</>,
-        isActive() {
-          return isMarkActive(editor, MarkType.BOLD);
-        },
-        onClick() {
-          toggleBold(null, editor);
-        },
-      };
-    },
-    (editor: Editor) => {
-      return {
-        icon: <>{italicIcon}</>,
-        isActive() {
-          return isMarkActive(editor, MarkType.ITALIC);
-        },
-        onClick() {
-          toggleItalic(null, editor);
-        },
-      };
-    },
-    (editor: Editor) => {
-      return {
-        icon: <>{underlineIcon}</>,
-        isActive() {
-          return isMarkActive(editor, MarkType.UNDERLINE);
-        },
-        onClick() {
-          toggleUnderline(null, editor);
-        },
-      };
-    },
-  ],
+  content: (editor: Editor) => {
+    const openLink = useLinksState((state) => state.open);
+    const close = useMenuState(state => state.close);
+    const isFocused = useFocused();
+
+    return (
+      <div className={styles.menu}>
+        <span
+          className={cn(styles.button, {
+            [styles.buttonActive]: isMarkActive(editor, MarkType.BOLD),
+          })}
+          onClick={() => toggleBold(null, editor)}
+        >
+          {boldIcon}
+        </span>
+        <span
+          className={cn(styles.button, {
+            [styles.buttonActive]: isMarkActive(editor, MarkType.ITALIC),
+          })}
+          onClick={() => toggleItalic(null, editor)}
+        >
+          {italicIcon}
+        </span>
+        <span
+          className={cn(styles.button, {
+            [styles.buttonActive]: isMarkActive(editor, MarkType.UNDERLINE),
+          })}
+          onClick={() => toggleUnderline(null, editor)}
+        >
+          {underlineIcon}
+        </span>
+        <span
+          className={cn(styles.button, {
+            [styles.buttonActive]: false,
+          })}
+          onClick={() => {
+            close();
+
+            const { selection } = editor;
+
+            if (
+              !selection ||
+              !isFocused ||
+              Range.isCollapsed(selection) ||
+              Editor.string(editor, selection) === ''
+            ) {
+              return;
+            }
+
+            const domSelection = window.getSelection();
+            const domRange = domSelection?.getRangeAt(0);
+            const box = domRange?.getBoundingClientRect();
+
+            openLink(box);
+          }}
+        >
+          {linkIcon}
+        </span>
+      </div>
+    );
+  },
 };
 
 export default {
@@ -136,13 +185,15 @@ export default {
 };
 export const Primary = {
   render: () => {
-    const [value, setValue] = useState(initialValue);
-    const plugins = [
+    const [value, setValue] = useState<Descendant[]>(initialValue);
+
+    const plugins = useMemo(() => [
       new BasicMarksPlugin(),
-      new DnDPlugin(),
       new SoftBreakPlugin(),
       new FloatingUiPlugin(floatingUiOptions),
-    ];
+      new LinksPlugin(),
+      new DnDPlugin(),
+    ], []);
 
     return <WeekEditor plugins={plugins} value={value} onChange={setValue} />;
   },

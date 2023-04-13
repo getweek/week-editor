@@ -1,30 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react';
-import cn from 'classnames';
-import { Editor, Range } from 'slate';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { Editor, Range } from 'slate';
+import { useFocused, useSlate, useSlateSelection } from 'slate-react';
 import { Options } from './types';
+import { create } from 'zustand';
 import styles from './styles.module.css';
-import { useSlate, useFocused, useSlateSelection } from 'slate-react';
+
+export const useMenuState = create((set) => ({
+  isOpen: false,
+  open: () => set({ isOpen: true }),
+  close: () => set({ isOpen: false }),
+}));
 
 export const Menu = ({ options }: { options: Options }) => {
   const [style, setStyle] = useState(undefined);
   const ref = useRef(null);
+
+  const isOpen = useMenuState((state) => state.isOpen);
+  const open = useMenuState((state) => state.open);
 
   const selection = useSlateSelection();
   const editor = useSlate();
   const isFocused = useFocused();
 
   useEffect(() => {
-    console.log(style);
-  }, [style]);
-
-  useEffect(() => {
     const element = ref.current;
     const { selection } = editor;
-
-    if (!element) {
-      return;
-    }
 
     if (
       !selection ||
@@ -40,6 +41,7 @@ export const Menu = ({ options }: { options: Options }) => {
     const domRange = domSelection?.getRangeAt(0);
     const rect = domRange?.getBoundingClientRect();
 
+    open();
     setStyle({
       opacity: 1,
       transform: 'scale(1)',
@@ -56,29 +58,13 @@ export const Menu = ({ options }: { options: Options }) => {
   return createPortal(
     <div
       ref={ref}
-      style={style}
+      style={isOpen ? style : undefined}
       className={styles.menu}
       onMouseDown={(event) => {
         event.preventDefault();
       }}
     >
-      {options.buttons?.map((buttonFn, index) => {
-        const button = buttonFn(editor);
-
-        return (
-          <span
-            key={index}
-            className={cn(styles.button, {
-              [styles.active]: button.isActive(),
-            })}
-            onClick={() => {
-              button.onClick();
-            }}
-          >
-            {button.icon}
-          </span>
-        );
-      })}
+      {options.content(editor)}
     </div>,
     document.body
   );

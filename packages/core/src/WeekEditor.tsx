@@ -132,15 +132,23 @@ export const WeekEditor = (props: Props) => {
     [plugins]
   );
 
-  const ui = useMemo(() => {
-    return plugins
-      .filter((p) => Boolean(p.ui))
-      .map((p) => <React.Fragment>{p.ui({ readOnly })}</React.Fragment>);
-  }, [plugins]);
+  const Ui = useCallback(
+    () =>
+      (
+        <>
+          {plugins
+            .filter((p) => Boolean(p.ui))
+            .map((p) => (
+              <React.Fragment>{p.ui({ readOnly })}</React.Fragment>
+            ))}
+        </>
+      ),
+    []
+  );
 
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
-      {ui}
+      <Ui />
       <Context>
         <SlateEditable />
       </Context>

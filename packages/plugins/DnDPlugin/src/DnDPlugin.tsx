@@ -2,7 +2,6 @@ import { useRef, useState, useEffect } from 'react';
 import { ReactEditor, RenderElementProps } from 'slate-react';
 import { DndProvider, useDrag, useDrop, XYCoord } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Reorder } from 'framer-motion';
 import { Editor, Element, Transforms } from 'slate';
 import styles from './styles.module.css';
 
@@ -12,7 +11,6 @@ export class DnDPlugin {
 
   init(editor: ReactEditor) {
     this.editor = editor;
-    this.items = editor.children.map((child) => child.id);
 
     return editor;
   }
@@ -84,6 +82,10 @@ export class DnDPlugin {
     const { isOver } = collected;
 
     preview(drop(ref));
+
+    if (editor.isInline(props.element)) {
+      return props.children;
+    }
 
     return (
       <div

@@ -1,11 +1,10 @@
 import { IUi } from '../../../core/types';
 import { Menu } from './Menu';
 import { Options } from './types';
-
 export class FloatingUiPlugin implements IUi {
   options: Options;
   
-  constructor(options: Options = {}) {
+  constructor(options: Options) {
     this.options = options;
   }
 

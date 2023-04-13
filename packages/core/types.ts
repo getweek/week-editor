@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Editor } from 'slate';
-import { ReactEditor, RenderLeafProps } from 'slate-react';
+import { ReactEditor, RenderElementProps, RenderLeafProps } from 'slate-react';
 
 export interface IShortcuts {
   shortcuts: Shortcut[];
@@ -8,6 +8,10 @@ export interface IShortcuts {
 
 export interface IHotkeys {
   hotkeys: Hotkey[];
+}
+
+export interface IElement {
+  renderElement: (props: RenderElementProps) => ReactNode;
 }
 
 export interface ILeaf {

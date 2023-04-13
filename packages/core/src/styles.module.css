@@ -1,0 +1,16 @@
+.menu {
+  display: flex;
+  padding: 2px;
+  gap: 2px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 2px;
+}
+
+.button:hover { 
+  background-color: rgba(0, 0, 0, 0.05);
+}

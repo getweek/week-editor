@@ -2,13 +2,5 @@ import { Editor } from 'slate';
 import { ReactNode } from 'react';
 
 export type Options = {
-  buttons: Array<UiButtonFn>;
+  content: (editor: Editor) => ReactNode;
 };
-
-type UiButton = {
-  icon: ReactNode;
-  isActive(): void;
-  onClick(): void;
-}
-
-type UiButtonFn = (editor: Editor) => UiButton;
