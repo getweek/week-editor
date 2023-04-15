@@ -1,0 +1,1 @@
+export { CommandsPlugin } from './src/CommandsPlugin';

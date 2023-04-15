@@ -5,7 +5,7 @@ import { ReactEditor, RenderElementProps, RenderLeafProps } from 'slate-react';
 export interface IPlugin {
   init?: (editor: Editor) => Editor;
   renderLeaf?: (props: RenderLeafProps) => ReactNode;
-  renderElement?: (props: RenderElementProps) => ReactNode;
+  renderElement?: (props: RenderElementProps, editor: ReactEditor) => ReactNode;
   shortcuts?: Shortcut[];
   hotkeys?: Hotkey[];
   serialize?(
@@ -14,9 +14,10 @@ export interface IPlugin {
   ): string | void;
   deserialize?(element: any, children: any): any;
   ui?: (params: UiParams) => ReactNode;
-  handlers?: Partial<
-    Pick<React.TextareaHTMLAttributes<HTMLDivElement>, 'onKeyDown'>
-  >;
+  handlers?: {
+    onKeyDown?(): void;
+    onChange?(): void;
+  }
 }
 
 type Shortcut = {

@@ -1,8 +1,9 @@
 import { Editor, Range, Node } from 'slate';
-import { IShortcuts } from '../../types';
+import { ReactEditor } from 'slate-react';
+import { IPlugin } from '../../types';
 
 
-export const withShortcuts = (plugins: IShortcuts[]) => (editor: Editor) => {
+export const withShortcuts = (plugins: IPlugin[]) => (editor: ReactEditor) => {
   const { insertText } = editor;
 
   editor.insertText = (text: string) => {

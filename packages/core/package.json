@@ -31,6 +31,7 @@
     "slate-react": "^0.93.0"
   },
   "dependencies": {
+    "@week/commands-plugin": "workspace:^1.0.0",
     "@week/lists-plugin": "workspace:^1.0.0",
     "is-hotkey": "^0.2.0",
     "zustand": "^4.3.7"

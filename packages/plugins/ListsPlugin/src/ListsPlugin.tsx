@@ -5,7 +5,7 @@ import { ListType } from './types';
 import styles from './styles.module.css';
 
 export class ListsPlugin implements IPlugin {
-  init(editor) {
+  init(editor: Editor) {
     const { normalizeNode } = editor;
 
     editor.normalizeNode = (entry) => {
@@ -23,6 +23,10 @@ export class ListsPlugin implements IPlugin {
             return;
           }
         }
+      }
+
+      if (isListItem(editor, node)) {
+        Node
       }
 
       normalizeNode(entry);
@@ -65,7 +69,7 @@ const turnInto = (type: ListType) => (editor: Editor, match) => {
   const { selection } = editor;
 
   Transforms.delete(editor, {
-    at: selection.focus,
+    at: selection?.focus,
     distance: match.before[0].length,
     reverse: true,
     unit: 'character',

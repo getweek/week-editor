@@ -40,7 +40,6 @@ export class DnDPlugin {
 
   renderElement(props: RenderElementProps, editor: ReactEditor) {
     const ref = useRef(null);
-    const [height, setHeight] = useState(0);
     const [direction, setDirection] = useState(0);
 
     const [dropped, drag, preview] = useDrag({
@@ -70,7 +69,6 @@ export class DnDPlugin {
           setDirection(1);
         }
 
-        setHeight(24);
       },
       drop(item, monitor) {
         const { location } = item;

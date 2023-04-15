@@ -11,10 +11,11 @@ import { DnDPlugin } from '@week/dnd-plugin';
 import { FloatingUiPlugin, useMenuState } from '@week/floating-ui-plugin';
 import { LinksPlugin, useLinksState } from '@week/links-plugin';
 import { SoftBreakPlugin } from '@week/soft-break-plugin';
-import { HeadingsPlugin } from '@week/headings-plugin';
+import { HeadingsPlugin, HeadingType } from '@week/headings-plugin';
 import { ListsPlugin, ListType } from '@week/lists-plugin';
+import { CommandsPlugin } from '@week/commands-plugin';
 import { useMemo, useState } from 'react';
-import { Editor, Descendant, Range } from 'slate';
+import { Editor, Descendant, Range, Transforms } from 'slate';
 import { WeekEditor } from './WeekEditor';
 import { useFocused } from 'slate-react';
 
@@ -181,6 +182,22 @@ const floatingUiOptions = {
   },
 };
 
+const commands = [
+  {
+    title: 'Heading 1',
+    action: (editor: Editor) => Transforms.setNodes(editor, { type: HeadingType.H1 }),
+  },
+  {
+    title: 'Heading 2',
+    action: (editor: Editor) => Transforms.setNodes(editor, { type: HeadingType.H2 }),
+  },
+  {
+    title: 'Heading 3',
+    action: (editor: Editor) => Transforms.setNodes(editor, { type: HeadingType.H3 }),
+  },
+  
+];
+
 export default {
   title: 'WeekEditor',
   component: WeekEditor,
@@ -197,6 +214,9 @@ export const Primary = {
         new LinksPlugin(),
         new HeadingsPlugin(),
         new ListsPlugin(),
+        new CommandsPlugin({
+          commands,
+        }),
         new DnDPlugin({
           ignore: [ListType.BULLETED_LIST, ListType.NUMBERED_LIST],
         }),

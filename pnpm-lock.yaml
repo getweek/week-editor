@@ -58,6 +58,7 @@ importers:
       '@types/react': ^18.0.34
       '@types/react-dom': ^18.0.11
       '@week/basic-marks-plugin': workspace:^1.0.0
+      '@week/commands-plugin': workspace:^1.0.0
       '@week/dnd-plugin': workspace:^1.0.0
       '@week/floating-ui-plugin': workspace:^1.0.0
       '@week/headings-plugin': workspace:^1.0.0
@@ -73,6 +74,7 @@ importers:
       slate-react: ^0.93.0
       zustand: ^4.3.7
     dependencies:
+      '@week/commands-plugin': link:../plugins/CommandsPlugin
       '@week/lists-plugin': link:../plugins/ListsPlugin
       is-hotkey: 0.2.0
       zustand: 4.3.7_react@18.2.0
@@ -102,6 +104,20 @@ importers:
       slate-hyperscript: 0.77.0_slate@0.93.0
     devDependencies:
       slate: 0.93.0
+
+  packages/plugins/CommandsPlugin:
+    specifiers:
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      slate: ^0.93.0
+      slate-react: ^0.93.0
+      zustand: ^4.3.7
+    devDependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      slate: 0.93.0
+      slate-react: 0.93.0_4g2c4r5qsqpvdw6ik7ztjpjdym
+      zustand: 4.3.7_react@18.2.0
 
   packages/plugins/DnDPlugin:
     specifiers:
@@ -176,6 +192,18 @@ importers:
       nanoid: ^4.0.2
     dependencies:
       nanoid: 4.0.2
+
+  packages/plugins/PluginTemplate:
+    specifiers:
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      slate: ^0.93.0
+      slate-react: ^0.93.0
+    devDependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      slate: 0.93.0
+      slate-react: 0.93.0_4g2c4r5qsqpvdw6ik7ztjpjdym
 
   packages/plugins/SoftBreakPlugin:
     specifiers: {}
