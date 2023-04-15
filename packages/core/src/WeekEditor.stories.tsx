@@ -1,3 +1,6 @@
+import { useFocused } from 'slate-react';
+import cn from 'classnames';
+import { BaseElement } from '../types';
 import {
   BasicMarksPlugin,
   isMarkActive,
@@ -6,7 +9,6 @@ import {
   toggleItalic,
   toggleUnderline,
 } from '@week/basic-marks-plugin';
-import cn from 'classnames';
 import { DnDPlugin } from '@week/dnd-plugin';
 import { FloatingUiPlugin, useMenuState } from '@week/floating-ui-plugin';
 import { LinksPlugin, useLinksState } from '@week/links-plugin';
@@ -17,7 +19,6 @@ import { CommandsPlugin } from '@week/commands-plugin';
 import { useMemo, useState } from 'react';
 import { Editor, Descendant, Range, Transforms } from 'slate';
 import { WeekEditor } from './WeekEditor';
-import { useFocused } from 'slate-react';
 
 import styles from './styles.module.css';
 
@@ -184,18 +185,25 @@ const floatingUiOptions = {
 
 const commands = [
   {
+    title: 'Paragraph',
+    action: (editor: Editor) =>
+      Transforms.setNodes(editor, { type: BaseElement }),
+  },
+  {
     title: 'Heading 1',
-    action: (editor: Editor) => Transforms.setNodes(editor, { type: HeadingType.H1 }),
+    action: (editor: Editor) =>
+      Transforms.setNodes(editor, { type: HeadingType.H1 }),
   },
   {
     title: 'Heading 2',
-    action: (editor: Editor) => Transforms.setNodes(editor, { type: HeadingType.H2 }),
+    action: (editor: Editor) =>
+      Transforms.setNodes(editor, { type: HeadingType.H2 }),
   },
   {
     title: 'Heading 3',
-    action: (editor: Editor) => Transforms.setNodes(editor, { type: HeadingType.H3 }),
+    action: (editor: Editor) =>
+      Transforms.setNodes(editor, { type: HeadingType.H3 }),
   },
-  
 ];
 
 export default {

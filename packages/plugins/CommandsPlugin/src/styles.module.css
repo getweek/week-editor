@@ -15,6 +15,7 @@
   left: -999999px;
   top: -999999px;
   opacity: 0;
+  background-color: #fff;
   transform: scale(0.7);
   border: 1px solid #eee;
   padding: 0;

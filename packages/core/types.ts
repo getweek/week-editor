@@ -20,6 +20,8 @@ export interface IPlugin {
   }
 }
 
+export const BaseElement = 'paragraph';
+
 type Shortcut = {
   trigger: string;
   before?: RegExp;

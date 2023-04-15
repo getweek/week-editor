@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import { Editor, Transforms } from 'slate';
 import { useSlateStatic } from 'slate-react';
 import { useCommands, Options } from './CommandsPlugin';
 import styles from './styles.module.css';
@@ -23,10 +24,14 @@ export const Menu = ({ box, options, onClose }: Props) => {
       .includes(filter.toLocaleLowerCase());
   });
 
+  useEffect(() => {
+    setIndex(0);
+  }, [filter]);
+
   const style = useMemo(
     () => ({
       left: `${box?.left}px`,
-      top: `${box?.top + 8}px`,
+      top: `${box?.top + box?.height}px`,
       opacity: 1,
       transform: 'scale(1)',
     }),
@@ -49,6 +54,13 @@ export const Menu = ({ box, options, onClose }: Props) => {
         case 'Enter': {
           event.preventDefault();
           commands[index].action(editor);
+
+          Transforms.delete(editor, {
+            unit: 'character',
+            distance: filter.length + 1,
+            reverse: true,
+          });
+
           setIndex(0);
           setFilter('');
           onClose();
@@ -62,7 +74,7 @@ export const Menu = ({ box, options, onClose }: Props) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [index]);
+  }, [index, commands.length]);
 
   return createPortal(
     <menu className={styles.menu} style={style}>

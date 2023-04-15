@@ -76,15 +76,14 @@ export class CommandsPlugin implements IPlugin {
     });
 
     const isEmpty = !entity || Node.string(entity[0]) === '';
-    const shouldOpen = entity && Node.string(entity[0]).startsWith('/');
 
     useEffect(() => {
-      if (shouldOpen) {
+      if (isOpen) {
         const box = ref.current.getBoundingClientRect();
         setBox(box);
         open();
       }
-    }, [shouldOpen]);
+    }, [isOpen]);
 
     return (
       <>
