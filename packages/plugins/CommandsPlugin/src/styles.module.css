@@ -2,7 +2,7 @@
   position: relative;
 }
 
-.hasPlaceholder::after {
+.hasPlaceholder > *::after {
   content: 'Type "/" to add a block';
   font-size: inherit;
   color: #aaa;
