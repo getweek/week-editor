@@ -1,18 +1,11 @@
 import { Editor, Transforms, Text } from 'slate';
 import { RenderLeafProps } from 'slate-react';
-import {
-  IHotkeys,
-  ILeaf,
-  ISerializable,
-  IShortcuts,
-} from '../../../core/types';
+import { IPlugin } from '../../../core/types';
 import escapeHtml from 'escape-html';
 import { jsx } from 'slate-hyperscript';
 import { MarkType } from './types';
 
-export class BasicMarksPlugin
-  implements IHotkeys, IShortcuts, ISerializable, ILeaf
-{
+export class BasicMarksPlugin implements IPlugin {
   hotkeys = [
     ['cmd+b', toggleBold] as const,
     ['ctrl+b', toggleBold] as const,
@@ -109,67 +102,70 @@ export class BasicMarksPlugin
     },
   ];
 
-  renderLeaf(props: RenderLeafProps) {
-    const { leaf, attributes, children } = props;
+  elements = [
+    {
+      isLeaf: true as const,
+      render(props: RenderLeafProps) {
+        const { leaf, attributes, children } = props;
 
-    let content = children;
+        let content = children;
 
-    if (leaf.bold) {
-      content = <strong>{content}</strong>;
-    }
+        if (leaf.bold) {
+          content = <strong>{content}</strong>;
+        }
 
-    if (leaf.italic) {
-      content = <em>{content}</em>;
-    }
+        if (leaf.italic) {
+          content = <em>{content}</em>;
+        }
 
-    if (leaf.underline) {
-      content = <u>{content}</u>;
-    }
+        if (leaf.underline) {
+          content = <u>{content}</u>;
+        }
 
-    return <span {...attributes}>{content}</span>;
-  }
+        return <span {...attributes}>{content}</span>;
+      },
+      serialize(node) {
+        if (Text.isText(node)) {
+          let text = escapeHtml(node.text);
 
-  serialize(node) {
-    if (Text.isText(node)) {
-      let text = escapeHtml(node.text);
+          if (node.bold) {
+            text = `<strong>${text}</strong>`;
+          }
+          if (node.italic) {
+            text = `<em>${text}</em>`;
+          }
+          if (node.underline) {
+            text = `<u>${text}</u>`;
+          }
 
-      if (node.bold) {
-        text = `<strong>${text}</strong>`;
-      }
-      if (node.italic) {
-        text = `<em>${text}</em>`;
-      }
-      if (node.underline) {
-        text = `<u>${text}</u>`;
-      }
+          return text;
+        }
+      },
+      deserialize(element, children) {
+        const { nodeName } = element;
 
-      return text;
-    }
-  }
+        let attrs;
+        switch (nodeName) {
+          case 'EM':
+          case 'I': {
+            attrs = { italic: true };
+            break;
+          }
+          case 'STRONG': {
+            attrs = { bold: true };
+            break;
+          }
+          case 'U': {
+            attrs = { underline: true };
+          }
+        }
 
-  deserialize(element, children) {
-    const { nodeName } = element;
-
-    let attrs;
-    switch (nodeName) {
-      case 'EM':
-      case 'I': {
-        attrs = { italic: true };
-        break;
-      }
-      case 'STRONG': {
-        attrs = { bold: true };
-        break;
-      }
-      case 'U': {
-        attrs = { underline: true };
-      }
-    }
-
-    if (attrs) {
-      return children.map((child) => jsx('text', attrs, child));
-    }
-  }
+        if (attrs) {
+          return children.map((child) => jsx('text', attrs, child));
+        }
+      },
+    },
+  ];
 }
 
 export const toggleBold = (event: any, editor: Editor) => {

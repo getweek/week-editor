@@ -6,8 +6,9 @@ import React, {
   ReactNode,
   KeyboardEvent,
   isValidElement,
+  ReactElement,
 } from 'react';
-import { createEditor, Descendant } from 'slate';
+import { createEditor, Element, Descendant, Editor } from 'slate';
 import { withHistory } from 'slate-history';
 import {
   Editable,
@@ -18,9 +19,10 @@ import {
 } from 'slate-react';
 import { withShortcuts } from './plugins/withShortcuts';
 import { isHotkey } from 'is-hotkey';
+import { IPlugin, IPluginHandlers } from '../types';
 
 type Props = {
-  plugins?: any[];
+  plugins?: IPlugin[];
   value: Descendant[];
   onChange(value: Descendant[]): void;
   readOnly?: boolean;
@@ -29,7 +31,7 @@ type Props = {
 const noOp = () => {};
 
 export const WeekEditor = (props: Props) => {
-  const { value, onChange, readOnly, plugins = [] } = props;
+  const { value, onChange, readOnly = false, plugins = [] } = props;
   const [editor] = useState(() =>
     withShortcuts(plugins)(withReact(withHistory(createEditor())))
   );
@@ -44,52 +46,61 @@ export const WeekEditor = (props: Props) => {
   }, []);
 
   const SlateEditable = useCallback(() => {
-    const renderElement = (props: RenderElementProps) => {
-      const element = plugins.reduce((prev, plugin) => {
-        if (plugin.renderElement) {
-          const newElement = plugin.renderElement(
-            {
-              ...props,
-              children: prev ? prev : props.children,
-            },
-            editor
-          );
-
-          return newElement || prev;
-        } else {
-          return prev;
-        }
-      }, null);
-
-      return (
-        element || (
-          <BaseElement {...props.attributes}>{props.children}</BaseElement>
-        )
-      );
-    };
-
-    const renderLeaf = (props: RenderLeafProps) => {
+    const renderElement = (props: RenderElementProps): ReactElement => {
       for (const plugin of plugins) {
-        if (plugin.renderLeaf) {
-          const element = plugin.renderLeaf(props);
-          if (element && isValidElement(element)) {
-            return element;
+        for (const element of plugin.elements || []) {
+          if (!element.isLeaf) {
+            return element.render(props, editor);
           }
         }
       }
 
-      return <span {...props} />;
+      return <BaseElement {...props} />;
     };
 
-    const handlers = plugins.reduce((prev, plugin) => {
+    const renderLeaf = (props: RenderLeafProps) => {
+      for (const plugin of plugins) {
+        plugin.elements?.map((element) => {
+          if (element.isLeaf) {
+            const el = element.render(props, editor);
+            if (el && isValidElement(el)) {
+              return el;
+            }
+          }
+        });
+      }
+
+      return <span {...props.attributes}>{props.children}</span>;
+    };
+
+    const allHandlers = plugins.reduce((handlers, plugin) => {
       if (plugin.handlers) {
-        for (const handler in plugin.handlers) {
-          prev[handler] = plugin.handlers[handler];
+        for (const [handler, fn] of Object.entries(plugin.handlers)) {
+          handlers[handler as keyof IPluginHandlers] = [
+            ...(handlers[handler as keyof IPluginHandlers] || []),
+            fn
+          ];
         }
       }
 
-      return prev;
-    }, {});
+      return handlers;
+    }, {} as Record<keyof IPluginHandlers, Function[]>);
+
+    const handlerNames = ['onKeyDown', 'onChange'] as const;
+
+    const handlers = handlerNames.reduce((handlers, name) => {
+      handlers[name] = (event: any) => {
+        plugins.forEach(plugin => {
+          const handler = plugin.handlers?.[name];
+          
+          if (handler) {
+            handler(event);
+          }
+        })
+      }
+
+      return handlers;
+    }, {} as Record<keyof IPluginHandlers, (event: Event) => void>);
 
     const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
       for (const plugin of plugins) {
@@ -103,7 +114,7 @@ export const WeekEditor = (props: Props) => {
         }
 
         if (plugin.handlers?.onKeyDown) {
-          plugin.handlers.onKeyDown(event, editor);
+          plugin.handlers.onKeyDown(event);
         }
       }
     };
@@ -133,16 +144,15 @@ export const WeekEditor = (props: Props) => {
   );
 
   const Ui = useCallback(
-    () =>
-      (
-        <>
-          {plugins
-            .filter((p) => Boolean(p.ui))
-            .map((p) => (
-              <React.Fragment>{p.ui({ readOnly })}</React.Fragment>
-            ))}
-        </>
-      ),
+    () => (
+      <>
+        {plugins
+          .filter((p) => Boolean(p.ui))
+          .map((p) => (
+            <React.Fragment>{p.ui!({ readOnly })}</React.Fragment>
+          ))}
+      </>
+    ),
     []
   );
 
