@@ -109,9 +109,14 @@ export class DnDPlugin {
         style={{
           // paddingTop: isOver && direction === -1 ? height : undefined,
           // paddingBottom: isOver && direction === 1 ? height : undefined,
-          borderTop: isOver && direction === -1 ? '2px solid blue' : undefined,
+          borderTop:
+            isOver && direction === -1
+              ? '2px solid lightblue'
+              : '2px solid transparent',
           borderBottom:
-            isOver && direction === 1 ? '2px solid blue' : undefined,
+            isOver && direction === 1
+              ? '2px solid lightblue'
+              : '2px solid transparent',
           opacity: isDragging ? 0 : 1,
         }}
       >
