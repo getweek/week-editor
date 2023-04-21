@@ -79,11 +79,18 @@ export class CommandsPlugin implements IPlugin {
 
     useEffect(() => {
       if (isOpen) {
-        const box = ref.current.getBoundingClientRect();
-        setBox(box);
-        open();
+        const box = ref.current?.getBoundingClientRect();
+
+        if (box) {
+          setBox(box);
+          open();
+        }
       }
     }, [isOpen]);
+
+    if (editor.isInline(props.element)) {
+      return props.children;
+    }
 
     return (
       <>
