@@ -9,7 +9,7 @@ export const Link = ({ attributes, children, element }: RenderElementProps) => {
   const open = useLinksState((state) => state.open);
   const selection = useSlateSelection();
 
-  const handleClick = (event: MouseEvent) => {
+  const handleClick = (event) => {
     if (event.metaKey || event.ctrlKey) {
       window.open(element.url, '_blank');
     } else {
