@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import cn from 'classnames';
 import { Editor, Transforms } from 'slate';
 import { useSlateStatic } from 'slate-react';
 import { useCommands, Options } from './CommandsPlugin';
@@ -82,8 +83,11 @@ export const Menu = ({ box, options, onClose }: Props) => {
         {commands.map((command, i) => (
           <li
             key={command.title}
-            className={index === i ? styles.active : undefined}
+            className={cn(styles.item, {
+              [styles.active]: index === i,
+            })}
           >
+            <span className={styles.icon}>{command.icon}</span>
             {command.title}
           </li>
         ))}

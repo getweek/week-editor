@@ -21,6 +21,10 @@ import { Editor, Descendant, Range, Transforms } from 'slate';
 import { WeekEditor } from './WeekEditor';
 
 import styles from './styles.module.css';
+import { paragraph } from './icons/paragraph';
+import { heading1 } from './icons/heading1';
+import { heading2 } from './icons/heading2';
+import { heading3 } from './icons/heading3';
 
 const boldIcon = (
   <svg
@@ -185,21 +189,25 @@ const floatingUiOptions = {
 
 const commands = [
   {
+    icon: <>{paragraph}</>,
     title: 'Paragraph',
     action: (editor: Editor) =>
       Transforms.setNodes(editor, { type: BaseElement }),
   },
   {
+    icon: heading1,
     title: 'Heading 1',
     action: (editor: Editor) =>
       Transforms.setNodes(editor, { type: HeadingType.H1 }),
   },
   {
+    icon: heading2,
     title: 'Heading 2',
     action: (editor: Editor) =>
       Transforms.setNodes(editor, { type: HeadingType.H2 }),
   },
   {
+    icon: heading3,
     title: 'Heading 3',
     action: (editor: Editor) =>
       Transforms.setNodes(editor, { type: HeadingType.H3 }),

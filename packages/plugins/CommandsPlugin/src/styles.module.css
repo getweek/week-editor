@@ -31,10 +31,23 @@
 }
 
 .menu li {
+  display: flex;
+  align-items: center;
   list-style: none;
   padding: 4px 8px;
   font-size: 14px;
   cursor: pointer;
+  gap: 8px;
+}
+
+.icon {
+  display: inline-flex;
+  height: 24px;
+  width: 24px;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 }
 
 .menu .active {

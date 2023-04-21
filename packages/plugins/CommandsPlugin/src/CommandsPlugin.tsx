@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { ReactNode, useState, useRef, useEffect } from 'react';
 import { Editor, Node, Range } from 'slate';
 import {
   ReactEditor,
@@ -31,6 +31,7 @@ export type Options = {
   commands: Array<{
     title: string;
     action(editor: Editor): void;
+    icon: ReactNode;
   }>;
 };
 
