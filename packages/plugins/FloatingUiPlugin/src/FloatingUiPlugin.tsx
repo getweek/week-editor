@@ -1,4 +1,4 @@
-import { IUi } from '../../../core/types';
+import { IUi } from '../../../core/src/types';
 import { Menu } from './Menu';
 import { Options } from './types';
 export class FloatingUiPlugin implements IUi {

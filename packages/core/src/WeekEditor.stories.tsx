@@ -1,6 +1,6 @@
 import { useFocused } from 'slate-react';
 import cn from 'classnames';
-import { BaseElement } from '../types';
+import { BaseElement } from './types';
 import {
   BasicMarksPlugin,
   isMarkActive,

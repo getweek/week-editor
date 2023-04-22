@@ -6,7 +6,7 @@ import {
   useSelected,
   useReadOnly,
 } from 'slate-react';
-import { IPlugin } from '../../../core/types';
+import { IPlugin } from '../../../core/src/types';
 import { Menu } from './Menu';
 import { create } from 'zustand';
 import styles from './styles.module.css';

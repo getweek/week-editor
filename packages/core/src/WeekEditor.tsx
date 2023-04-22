@@ -19,7 +19,7 @@ import {
 } from 'slate-react';
 import { withShortcuts } from './plugins/withShortcuts';
 import { isHotkey } from 'is-hotkey';
-import { IPlugin, IPluginHandlers } from '../types';
+import { IPlugin, IPluginHandlers } from './types';
 
 type Props = {
   plugins?: IPlugin[];
@@ -50,7 +50,10 @@ export const WeekEditor = (props: Props) => {
       for (const plugin of plugins) {
         for (const element of plugin.elements || []) {
           if (!element.isLeaf) {
-            return element.render(props, editor);
+            const el = element.render(props, editor);
+            if (el) {
+              return el;
+            }
           }
         }
       }
@@ -72,19 +75,6 @@ export const WeekEditor = (props: Props) => {
 
       return <span {...props.attributes}>{props.children}</span>;
     };
-
-    const allHandlers = plugins.reduce((handlers, plugin) => {
-      if (plugin.handlers) {
-        for (const [handler, fn] of Object.entries(plugin.handlers)) {
-          handlers[handler as keyof IPluginHandlers] = [
-            ...(handlers[handler as keyof IPluginHandlers] || []),
-            fn
-          ];
-        }
-      }
-
-      return handlers;
-    }, {} as Record<keyof IPluginHandlers, Function[]>);
 
     const handlerNames = ['onKeyDown', 'onChange'] as const;
 

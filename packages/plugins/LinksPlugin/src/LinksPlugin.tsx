@@ -1,7 +1,7 @@
 import { Editor } from 'slate';
 import { create } from 'zustand';
 import { RenderElementProps } from '../../../core/node_modules/slate-react/dist';
-import { IElement, IUi } from '../../../core/types';
+import { IElement, IUi } from '../../../core/src/types';
 import { Link } from './Link';
 import { Menu } from './Menu';
 import { ELEMENT_LINK } from './types';

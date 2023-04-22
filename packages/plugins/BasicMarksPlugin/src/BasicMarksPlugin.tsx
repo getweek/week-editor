@@ -1,6 +1,6 @@
 import { Editor, Transforms, Text } from 'slate';
 import { RenderLeafProps } from 'slate-react';
-import { IPlugin } from '../../../core/types';
+import { IPlugin } from '../../../core/src/types';
 import escapeHtml from 'escape-html';
 import { jsx } from 'slate-hyperscript';
 import { MarkType } from './types';

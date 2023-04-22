@@ -1,4 +1,4 @@
-import { IHandlers } from "../../../core/types";
+import { IHandlers } from "../../../core/src/types";
 
 export class SoftBreakPlugin implements IHandlers {
   handlers = {

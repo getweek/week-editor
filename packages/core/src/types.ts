@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler, ReactElement, ReactNode } from 'react';
-import { Editor } from 'slate';
+import { Descendant, Editor, Element, Node } from 'slate';
 import { ReactEditor, RenderElementProps, RenderLeafProps } from 'slate-react';
 
 export interface IPlugin {
@@ -9,7 +9,7 @@ export interface IPlugin {
   elements?: (LeafElement | BlockElement)[];
   ui?: (params: UiParams) => ReactNode;
   handlers?: IPluginHandlers;
-  renderContext(children: ReactNode): ReactNode;  
+  renderContext?(children: ReactNode): ReactNode;
 }
 
 export interface IPluginHandlers {
@@ -23,13 +23,12 @@ type Shortcut = {
   trigger: string;
   before?: RegExp;
   after?: RegExp;
-  change(
-    editor: Editor,
-    match: {
-      before?: RegExpExecArray;
-      after?: RegExpExecArray;
-    }
-  ): void;
+  change(editor: Editor, match: ChangeMatch): void;
+};
+
+export type ChangeMatch = {
+  before?: RegExpExecArray;
+  after?: RegExpExecArray;
 };
 
 type Hotkey = readonly [string, (event: KeyboardEvent, editor: Editor) => void];
@@ -41,10 +40,7 @@ type UiParams = {
 type WeekElement = {
   isVoid?: boolean;
   isInline?: boolean;
-  serialize?(
-    node: Element | Text | Element[] | Text[],
-    serialize: WeekElement['serialize']
-  ): string | undefined;
+  serialize?: Serialize;
   deserialize?(element: any, children: any): any;
   command?: {
     icon: ReactNode;
@@ -54,12 +50,17 @@ type WeekElement = {
   };
 };
 
+export type Serialize = (
+  node: Node,
+  serialize: Serialize
+) => string | undefined;
+
 type LeafElement = {
   isLeaf: true;
-  render(props: RenderLeafProps, editor: Editor): ReactElement;
+  render(props: RenderLeafProps, editor: Editor): ReactElement | null;
 } & WeekElement;
 
 type BlockElement = {
   isLeaf: false;
-  render(props: RenderElementProps, editor: Editor): ReactElement;
+  render(props: RenderElementProps, editor: Editor): ReactElement | null;
 } & WeekElement;

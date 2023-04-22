@@ -1,9 +1,8 @@
 import { RenderElementProps } from 'slate-react';
-import { Editor, Transforms } from 'slate';
+import { Editor, Transforms, Node } from 'slate';
 import { jsx } from 'slate-hyperscript';
-import { IPlugin } from '../../../core/types';
-import { ReactNode } from '../../../core/node_modules/@types/react';
-import { HeadingType } from './types';
+import { ChangeMatch, IPlugin, Serialize } from '../../../core/src/types';
+import { HeadingType } from '../types';
 
 export class HeadingsPlugin implements IPlugin {
   elements = [
@@ -19,9 +18,11 @@ export class HeadingsPlugin implements IPlugin {
             return <h2 {...attributes}>{children}</h2>;
           case HeadingType.H3:
             return <h3 {...attributes}>{children}</h3>;
+          default:
+            return null;
         }
       },
-      serialize(node, serialize) {
+      serialize(node: Node, serialize: Serialize) {
         if ('type' in node) {
           switch (node.type) {
             case HeadingType.H1:
@@ -34,7 +35,7 @@ export class HeadingsPlugin implements IPlugin {
         }
       },
 
-      deserialize(element, children) {
+      deserialize(element: HTMLElement, children: any[]) {
         const { nodeName } = element;
 
         switch (nodeName) {
@@ -68,13 +69,13 @@ export class HeadingsPlugin implements IPlugin {
   ];
 }
 
-const turnInto = (type: HeadingType) => (editor: Editor, match) => {
+const turnInto = (type: HeadingType) => (editor: Editor, match: ChangeMatch) => {
   const { selection } = editor;
 
   if (selection) {
     Transforms.delete(editor, {
       at: selection.focus,
-      distance: match.before[0].length,
+      distance: match.before?.[0].length,
       reverse: true,
       unit: 'character',
     });

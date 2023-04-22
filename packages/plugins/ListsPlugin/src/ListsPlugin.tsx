@@ -1,4 +1,4 @@
-import { IPlugin } from '../../../core/types';
+import { IPlugin } from '../../../core/src/types';
 import { Editor, Transforms, Node } from 'slate';
 import { RenderElementProps } from 'slate-react';
 import { ListType } from './types';
