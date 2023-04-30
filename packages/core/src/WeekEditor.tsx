@@ -20,6 +20,7 @@ import {
 import { withShortcuts } from './plugins/withShortcuts';
 import { isHotkey } from 'is-hotkey';
 import { IPlugin, IPluginHandlers } from './types';
+import styles from './styles.module.css';
 
 type Props = {
   plugins?: IPlugin[];
@@ -47,18 +48,33 @@ export const WeekEditor = (props: Props) => {
 
   const SlateEditable = useCallback(() => {
     const renderElement = (props: RenderElementProps): ReactElement => {
+      let result = null;
       for (const plugin of plugins) {
         for (const element of plugin.elements || []) {
           if (!element.isLeaf) {
-            const el = element.render(props, editor);
-            if (el) {
-              return el;
-            }
+            const newElement = element.render(props, editor);
+            result = newElement || result;
           }
         }
       }
 
-      return <BaseElement {...props} />;
+      console.log(result);
+
+      for (const plugin of plugins) {
+        if (plugin.renderElement) {
+          const newElement = plugin.renderElement(
+            {
+              ...props,
+              children: result || <BaseElement {...props} />,
+            },
+            editor
+          );
+
+          result = newElement || result;
+        }
+      }
+
+      return result || <BaseElement {...props} />;
     };
 
     const renderLeaf = (props: RenderLeafProps) => {
@@ -80,14 +96,14 @@ export const WeekEditor = (props: Props) => {
 
     const handlers = handlerNames.reduce((handlers, name) => {
       handlers[name] = (event: any) => {
-        plugins.forEach(plugin => {
+        plugins.forEach((plugin) => {
           const handler = plugin.handlers?.[name];
-          
+
           if (handler) {
             handler(event);
           }
-        })
-      }
+        });
+      };
 
       return handlers;
     }, {} as Record<keyof IPluginHandlers, (event: Event) => void>);
@@ -157,5 +173,9 @@ export const WeekEditor = (props: Props) => {
 };
 
 const BaseElement = (props: RenderElementProps) => {
-  return <p {...props.attributes}>{props.children}</p>;
+  return (
+    <p {...props.attributes} className={styles.paragraph}>
+      {props.children}
+    </p>
+  );
 };

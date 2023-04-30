@@ -17,6 +17,15 @@ importers:
       '@storybook/react-vite': ^7.0.2
       '@storybook/react-webpack5': ^7.0.2
       '@storybook/testing-library': ^0.0.14-next.2
+      '@week/basic-marks-plugin': workspace:^1.0.0
+      '@week/commands-plugin': workspace:^1.0.0
+      '@week/dnd-plugin': workspace:^1.0.0
+      '@week/floating-ui-plugin': workspace:^1.0.0
+      '@week/headings-plugin': workspace:^0.1.0
+      '@week/links-plugin': workspace:^1.0.0
+      '@week/lists-plugin': workspace:^1.0.0
+      '@week/soft-break-plugin': workspace:^1.0.0
+      classnames: ^2.3.2
       prettier: ^2.8.7
       prop-types: ^15.8.1
       react: ^18.2.0
@@ -28,6 +37,7 @@ importers:
       typescript: ^5.0.4
       vite: ^4.2.1
     dependencies:
+      classnames: 2.3.2
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       slate: 0.93.0
@@ -47,6 +57,14 @@ importers:
       '@storybook/react-vite': 7.0.2_a4babu64auye3fnqo2wrbuo7au
       '@storybook/react-webpack5': 7.0.2_tvrvbu6r5w7oyqiu4bvze3slou
       '@storybook/testing-library': 0.0.14-next.2
+      '@week/basic-marks-plugin': link:packages/plugins/BasicMarksPlugin
+      '@week/commands-plugin': link:packages/plugins/CommandsPlugin
+      '@week/dnd-plugin': link:packages/plugins/DnDPlugin
+      '@week/floating-ui-plugin': link:packages/plugins/FloatingUiPlugin
+      '@week/headings-plugin': link:packages/plugins/HeadingsPlugin
+      '@week/links-plugin': link:packages/plugins/LinksPlugin
+      '@week/lists-plugin': link:packages/plugins/ListsPlugin
+      '@week/soft-break-plugin': link:packages/plugins/SoftBreakPlugin
       prettier: 2.8.7
       prop-types: 15.8.1
       storybook: 7.0.2
@@ -57,15 +75,6 @@ importers:
     specifiers:
       '@types/react': ^18.0.34
       '@types/react-dom': ^18.0.11
-      '@week/basic-marks-plugin': workspace:^1.0.0
-      '@week/commands-plugin': workspace:^1.0.0
-      '@week/dnd-plugin': workspace:^1.0.0
-      '@week/floating-ui-plugin': workspace:^1.0.0
-      '@week/headings-plugin': workspace:^1.0.0
-      '@week/links-plugin': workspace:^1.0.0
-      '@week/lists-plugin': workspace:^1.0.0
-      '@week/node-id-plugin': workspace:^1.0.0
-      '@week/soft-break-plugin': workspace:^1.0.0
       classnames: ^2.3.2
       is-hotkey: ^0.2.0
       react: ^18.2.0
@@ -74,20 +83,11 @@ importers:
       slate-react: ^0.93.0
       zustand: ^4.3.7
     dependencies:
-      '@week/commands-plugin': link:../plugins/CommandsPlugin
-      '@week/lists-plugin': link:../plugins/ListsPlugin
       is-hotkey: 0.2.0
       zustand: 4.3.7_react@18.2.0
     devDependencies:
       '@types/react': 18.0.34
       '@types/react-dom': 18.0.11
-      '@week/basic-marks-plugin': link:../plugins/BasicMarksPlugin
-      '@week/dnd-plugin': link:../plugins/DnDPlugin
-      '@week/floating-ui-plugin': link:../plugins/FloatingUiPlugin
-      '@week/headings-plugin': link:../plugins/HeadingsPlugin
-      '@week/links-plugin': link:../plugins/LinksPlugin
-      '@week/node-id-plugin': link:../plugins/NodeIdPlugin
-      '@week/soft-break-plugin': link:../plugins/SoftBreakPlugin
       classnames: 2.3.2
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0

@@ -10,6 +10,7 @@ export interface IPlugin {
   ui?: (params: UiParams) => ReactNode;
   handlers?: IPluginHandlers;
   renderContext?(children: ReactNode): ReactNode;
+  renderElement?(props: RenderElementProps, editor: Editor): ReactElement | null;
 }
 
 export interface IPluginHandlers {

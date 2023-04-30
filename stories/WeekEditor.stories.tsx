@@ -1,6 +1,6 @@
 import { useFocused } from 'slate-react';
 import cn from 'classnames';
-import { BaseElement } from './types';
+import { BaseElement } from '../packages/core/src/types';
 import {
   BasicMarksPlugin,
   isMarkActive,
@@ -18,13 +18,13 @@ import { ListsPlugin, ListType } from '@week/lists-plugin';
 import { CommandsPlugin } from '@week/commands-plugin';
 import { useMemo, useState } from 'react';
 import { Editor, Descendant, Range, Transforms } from 'slate';
-import { WeekEditor } from './WeekEditor';
+import { WeekEditor } from '../packages/core/src/WeekEditor';
 
 import styles from './styles.module.css';
-import { paragraph } from './icons/paragraph';
-import { heading1 } from './icons/heading1';
-import { heading2 } from './icons/heading2';
-import { heading3 } from './icons/heading3';
+import { paragraph } from '../packages/core/src/icons/paragraph';
+import { heading1 } from '../packages/core/src/icons/heading1';
+import { heading2 } from '../packages/core/src/icons/heading2';
+import { heading3 } from '../packages/core/src/icons/heading3';
 
 const boldIcon = (
   <svg
