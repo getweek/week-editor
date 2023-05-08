@@ -1,4 +1,4 @@
-import { RenderElementProps } from 'slate-react';
+import React, { RenderElementProps } from 'slate-react';
 import { Editor, Transforms, Node } from 'slate';
 import { jsx } from 'slate-hyperscript';
 import { ChangeMatch, IPlugin, Serialize } from '../../../core/src/types';

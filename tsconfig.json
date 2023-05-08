@@ -3,7 +3,8 @@
     "target": "es2016",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     "module": "ES6",                                /* Specify what module code is generated. */
     "baseUrl": "./",   
-    "moduleResolution": "node",                               /* Specify the base directory to resolve non-relative module names. */
+    "moduleResolution": "node",
+    "jsx": "react",                               /* Specify the base directory to resolve non-relative module names. */
     "paths": {
       "*": ["packages"]
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
