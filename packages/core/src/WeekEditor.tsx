@@ -8,18 +8,20 @@ import React, {
   isValidElement,
   ReactElement,
 } from 'react';
-import { createEditor, Element, Descendant, Editor } from 'slate';
-import { withHistory } from 'slate-history';
+import { createEditor, Element, Descendant, Editor, BaseEditor } from 'slate';
+import { HistoryEditor, withHistory } from 'slate-history';
 import {
   Editable,
   Slate,
   withReact,
   RenderElementProps,
   RenderLeafProps,
+  ReactEditor,
 } from 'slate-react';
 import { withShortcuts } from './plugins/withShortcuts';
 import { isHotkey } from 'is-hotkey';
-import { IPlugin, IPluginHandlers } from './types';
+import { FullEditor, IPlugin, IPluginHandlers } from './types';
+import { CommandsPlugin } from './plugins/CommandsPlugin';
 import styles from './styles.module.css';
 
 type Props = {
@@ -31,20 +33,31 @@ type Props = {
 
 const noOp = () => {};
 
-export const WeekEditor = (props: Props) => {
-  const { value, onChange, readOnly = false, plugins = [] } = props;
-  const [editor] = useState(() =>
-    withShortcuts(plugins)(withReact(withHistory(createEditor())))
-  );
+const innerPlugins = (plugins: IPlugin[]): IPlugin[] => {
+  return [new CommandsPlugin({ plugins })];
+};
 
-  useEffect(() => {
-    plugins.reduce((prev, plugin) => {
+export const WeekEditor = (props: Props) => {
+  const { value, onChange, readOnly = false } = props;
+  const plugins = [
+    ...innerPlugins(props.plugins || []),
+    ...(props.plugins || []),
+  ];
+  const [editor] = useState<FullEditor>(() => {
+    const baseEditor = withReact(withHistory(createEditor()));
+
+    const editorWithPlugins = [withShortcuts].reduce((editor, plugin) => {
+      return plugin(plugins)(baseEditor);
+    }, baseEditor);
+
+    return plugins.reduce((prev, plugin) => {
       if (plugin.init) {
         return plugin.init(prev);
       }
+
       return prev;
-    }, editor);
-  }, []);
+    }, editorWithPlugins);
+  });
 
   const SlateEditable = useCallback(() => {
     const renderElement = (props: RenderElementProps): ReactElement => {
@@ -58,11 +71,9 @@ export const WeekEditor = (props: Props) => {
         }
       }
 
-      console.log(result);
-
       for (const plugin of plugins) {
         if (plugin.renderElement) {
-          const newElement = plugin.renderElement(
+          const newElement: any = plugin.renderElement(
             {
               ...props,
               children: result || <BaseElement {...props} />,
@@ -155,8 +166,8 @@ export const WeekEditor = (props: Props) => {
       <>
         {plugins
           .filter((p) => Boolean(p.ui))
-          .map((p) => (
-            <React.Fragment>{p.ui!({ readOnly })}</React.Fragment>
+          .map((p, index) => (
+            <React.Fragment key={index}>{p.ui!({ readOnly })}</React.Fragment>
           ))}
       </>
     ),

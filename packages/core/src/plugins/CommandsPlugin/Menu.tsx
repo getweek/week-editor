@@ -1,9 +1,10 @@
-import { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import cn from 'classnames';
 import { Editor, Transforms } from 'slate';
 import { useSlateStatic } from 'slate-react';
 import { useCommands, Options } from './CommandsPlugin';
+import { Command } from '../../types';
 import styles from './styles.module.css';
 
 type Props = {
@@ -19,11 +20,9 @@ export const Menu = ({ box, options, onClose }: Props) => {
 
   const editor = useSlateStatic();
 
-  const commands = options.commands.filter((command) => {
-    return command.title
-      .toLocaleLowerCase()
-      .includes(filter.toLocaleLowerCase());
-  });
+  const commands = options.plugins.reduce((commands, plugin) => {
+    return commands.concat(plugin?.commands || []);
+  }, [] as Command[]);
 
   useEffect(() => {
     setIndex(0);
@@ -79,19 +78,23 @@ export const Menu = ({ box, options, onClose }: Props) => {
 
   return createPortal(
     <menu className={styles.menu} style={style}>
-      <ul>
-        {commands.map((command, i) => (
-          <li
-            key={command.title}
-            className={cn(styles.item, {
-              [styles.active]: index === i,
-            })}
-          >
-            <span className={styles.icon}>{command.icon}</span>
-            {command.title}
-          </li>
-        ))}
-      </ul>
+      {commands.length ? (
+        <ul>
+          {commands.map((command, i) => (
+            <li
+              key={command.title}
+              className={cn(styles.item, {
+                [styles.active]: index === i,
+              })}
+            >
+              <span className={styles.icon}>{command.icon}</span>
+              {command.title}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className={styles.zeroScreen}>No commands found</div>
+      )}
     </menu>,
     document.body
   );

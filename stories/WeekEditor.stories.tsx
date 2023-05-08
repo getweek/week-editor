@@ -230,9 +230,9 @@ export const Primary = {
         new LinksPlugin(),
         new HeadingsPlugin(),
         new ListsPlugin(),
-        new CommandsPlugin({
-          commands,
-        }),
+        // new CommandsPlugin({
+        //   commands,
+        // }),
         new DnDPlugin({
           ignore: [ListType.BULLETED_LIST, ListType.NUMBERED_LIST],
         }),

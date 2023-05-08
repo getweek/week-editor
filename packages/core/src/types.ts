@@ -1,16 +1,23 @@
 import React, { ChangeEventHandler, ReactElement, ReactNode } from 'react';
-import { Descendant, Editor, Element, Node } from 'slate';
+import { BaseEditor, Descendant, Editor, Element, Node } from 'slate';
+import { HistoryEditor } from 'slate-history';
 import { ReactEditor, RenderElementProps, RenderLeafProps } from 'slate-react';
 
+export type FullEditor = BaseEditor & HistoryEditor & ReactEditor;
+
 export interface IPlugin {
-  init?: (editor: Editor) => ReactEditor;
+  init?: (editor: FullEditor) => FullEditor;
   shortcuts?: Shortcut[];
   hotkeys?: Hotkey[];
   elements?: (LeafElement | BlockElement)[];
   ui?: (params: UiParams) => ReactNode;
   handlers?: IPluginHandlers;
   renderContext?(children: ReactNode): ReactNode;
-  renderElement?(props: RenderElementProps, editor: Editor): ReactElement | null;
+  renderElement?(
+    props: RenderElementProps,
+    editor: Editor
+  ): ReactElement | null;
+  commands?: Command[];
 }
 
 export interface IPluginHandlers {
@@ -25,6 +32,12 @@ type Shortcut = {
   before?: RegExp;
   after?: RegExp;
   change(editor: Editor, match: ChangeMatch): void;
+};
+
+export type Command = {
+  title: string;
+  action(editor: Editor): void;
+  icon: ReactNode;
 };
 
 export type ChangeMatch = {

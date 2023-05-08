@@ -1,12 +1,12 @@
-import { ReactNode, useState, useRef, useEffect } from 'react';
-import { Editor, Node, Range } from 'slate';
+import React, { ReactNode, useState, useRef, useEffect } from 'react';
+import { BaseElement, Editor, Node, Range } from 'slate';
 import {
   ReactEditor,
   RenderElementProps,
   useSelected,
   useReadOnly,
 } from 'slate-react';
-import { IPlugin } from '../../../core/src/types';
+import { FullEditor, IPlugin } from '../../types';
 import { Menu } from './Menu';
 import { create } from 'zustand';
 import styles from './styles.module.css';
@@ -28,17 +28,13 @@ export const useCommands = create<Store>((set) => ({
 }));
 
 export type Options = {
-  commands: Array<{
-    title: string;
-    action(editor: Editor): void;
-    icon: ReactNode;
-  }>;
+  plugins: IPlugin[];
 };
 
 export class CommandsPlugin implements IPlugin {
   constructor(private options: Options) {}
 
-  init(editor: Editor) {
+  init(editor: FullEditor) {
     const { onChange, insertText } = editor;
 
     editor.insertText = (text) => {
@@ -54,7 +50,10 @@ export class CommandsPlugin implements IPlugin {
 
       if (isOpen) {
         const filter = /\/(.*)/g.exec(getCurrentText(editor));
-        useCommands.setState({ filter: filter?.[1] || '' });
+        useCommands.setState({
+          filter: filter?.[1] || '',
+          isOpen: Boolean(filter),
+        });
       }
 
       return onChange(...args);
@@ -66,8 +65,8 @@ export class CommandsPlugin implements IPlugin {
   renderElement(props: RenderElementProps, editor: ReactEditor) {
     const isSelected = useSelected();
     const isReadOnly = useReadOnly();
-    const ref = useRef(null);
-    const [box, setBox] = useState(null);
+    const ref = useRef<HTMLDivElement>(null);
+    const [box, setBox] = useState<DOMRect | null>(null);
     const isOpen = useCommands((state) => state.isOpen);
     const open = useCommands((state) => state.open);
     const close = useCommands((state) => state.close);
@@ -105,7 +104,7 @@ export class CommandsPlugin implements IPlugin {
         >
           {props.children}
         </div>
-        {isOpen && isSelected && (
+        {isOpen && isSelected && box && (
           <Menu options={this.options} box={box} onClose={close} />
         )}
       </>
