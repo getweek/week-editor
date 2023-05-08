@@ -78,18 +78,19 @@ export const WeekEditor = (props: Props) => {
     };
 
     const renderLeaf = (props: RenderLeafProps) => {
+      let result;
       for (const plugin of plugins) {
         plugin.elements?.map((element) => {
           if (element.isLeaf) {
-            const el = element.render(props, editor);
-            if (el && isValidElement(el)) {
-              return el;
+            const newElement = element.render(props, editor);
+            if (newElement && isValidElement(newElement)) {
+              result = newElement;
             }
           }
         });
       }
 
-      return <span {...props.attributes}>{props.children}</span>;
+      return result || <span {...props.attributes}>{props.children}</span>;
     };
 
     const handlerNames = ['onKeyDown', 'onChange'] as const;
