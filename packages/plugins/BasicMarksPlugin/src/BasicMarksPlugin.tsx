@@ -26,7 +26,7 @@ export class BasicMarksPlugin implements IPlugin {
         const { selection } = editor;
 
         Transforms.delete(editor, {
-          at: selection.focus,
+          at: selection?.focus,
           distance: match.before[0].length,
           unit: 'character',
           reverse: true,
