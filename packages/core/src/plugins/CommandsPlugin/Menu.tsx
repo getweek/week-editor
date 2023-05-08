@@ -21,8 +21,17 @@ export const Menu = ({ box, options, onClose }: Props) => {
   const editor = useSlateStatic();
 
   const commands = options.plugins.reduce((commands, plugin) => {
-    return commands.concat(plugin?.commands || []);
+    const pluginCommands = (plugin.elements || []).reduce(
+      (commands, element) => {
+        return commands.concat(element.commands || []);
+      },
+      [] as Command[]
+    );
+
+    return commands.concat(pluginCommands);
   }, [] as Command[]);
+
+  console.log(commands);
 
   useEffect(() => {
     setIndex(0);

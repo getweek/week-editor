@@ -17,7 +17,7 @@ export interface IPlugin {
     props: RenderElementProps,
     editor: Editor
   ): ReactElement | null;
-  commands?: Command[];
+  getElements?(): (LeafElement | BlockElement)[];
 }
 
 export interface IPluginHandlers {
@@ -36,8 +36,9 @@ type Shortcut = {
 
 export type Command = {
   title: string;
-  action(editor: Editor): void;
-  icon: ReactNode;
+  group?: string;
+  icon?: ReactNode;
+  aliases?: string[];
 };
 
 export type ChangeMatch = {
@@ -56,12 +57,7 @@ type WeekElement = {
   isInline?: boolean;
   serialize?: Serialize;
   deserialize?(element: any, children: any): any;
-  command?: {
-    icon: ReactNode;
-    title: string;
-    group: string;
-    aliases: string[];
-  };
+  commands?: Array<Command>;
 };
 
 export type Serialize = (

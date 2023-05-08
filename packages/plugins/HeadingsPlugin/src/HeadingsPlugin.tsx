@@ -47,6 +47,13 @@ export class HeadingsPlugin implements IPlugin {
             return jsx('element', { type: HeadingType.H3 }, children);
         }
       },
+      commands: [
+        {
+          title: 'test',
+          group: 'test',
+          icon: 'test',
+        },
+      ],
     },
   ];
 
@@ -69,19 +76,20 @@ export class HeadingsPlugin implements IPlugin {
   ];
 }
 
-const turnInto = (type: HeadingType) => (editor: Editor, match: ChangeMatch) => {
-  const { selection } = editor;
+const turnInto =
+  (type: HeadingType) => (editor: Editor, match: ChangeMatch) => {
+    const { selection } = editor;
 
-  if (selection) {
-    Transforms.delete(editor, {
-      at: selection.focus,
-      distance: match.before?.[0].length,
-      reverse: true,
-      unit: 'character',
-    });
-  
-    Transforms.setNodes(editor, {
-      type,
-    });
-  }
-};
+    if (selection) {
+      Transforms.delete(editor, {
+        at: selection.focus,
+        distance: match.before?.[0].length,
+        reverse: true,
+        unit: 'character',
+      });
+
+      Transforms.setNodes(editor, {
+        type,
+      });
+    }
+  };
