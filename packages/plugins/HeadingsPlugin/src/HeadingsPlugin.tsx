@@ -49,9 +49,25 @@ export class HeadingsPlugin implements IPlugin {
       },
       commands: [
         {
-          title: 'test',
-          group: 'test',
-          icon: 'test',
+          title: 'Heading 1',
+          group: 'Headings',
+          icon: heading1Icon,
+          action: (editor: Editor) =>
+            Transforms.setNodes(editor, { type: HeadingType.H1 }),
+        },
+        {
+          title: 'Heading 2',
+          group: 'Headings',
+          icon: heading2Icon,
+          action: (editor: Editor) =>
+            Transforms.setNodes(editor, { type: HeadingType.H2 }),
+        },
+        {
+          title: 'Heading 3',
+          group: 'Headings',
+          icon: heading3Icon,
+          action: (editor: Editor) =>
+            Transforms.setNodes(editor, { type: HeadingType.H3 }),
         },
       ],
     },
@@ -93,3 +109,79 @@ const turnInto =
       });
     }
   };
+
+const heading1Icon = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="icon icon-tabler icon-tabler-h-1"
+    width={16}
+    height={16}
+    viewBox="0 0 24 24"
+    strokeWidth="1.25"
+    stroke="currentColor"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M19 18v-8l-2 2"></path>
+    <path d="M4 6v12"></path>
+    <path d="M12 6v12"></path>
+    <path d="M11 18h2"></path>
+    <path d="M3 18h2"></path>
+    <path d="M4 12h8"></path>
+    <path d="M3 6h2"></path>
+    <path d="M11 6h2"></path>
+  </svg>
+);
+
+const heading2Icon = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="icon icon-tabler icon-tabler-h-2"
+    width={16}
+    height={16}
+    viewBox="0 0 24 24"
+    strokeWidth="1.25"
+    stroke="currentColor"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M17 12a2 2 0 1 1 4 0c0 .591 -.417 1.318 -.816 1.858l-3.184 4.143l4 0"></path>
+    <path d="M4 6v12"></path>
+    <path d="M12 6v12"></path>
+    <path d="M11 18h2"></path>
+    <path d="M3 18h2"></path>
+    <path d="M4 12h8"></path>
+    <path d="M3 6h2"></path>
+    <path d="M11 6h2"></path>
+  </svg>
+);
+
+const heading3Icon = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="icon icon-tabler icon-tabler-h-3"
+    width={16}
+    height={16}
+    viewBox="0 0 24 24"
+    strokeWidth="1.25"
+    stroke="currentColor"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M19 14a2 2 0 1 0 -2 -2"></path>
+    <path d="M17 16a2 2 0 1 0 2 -2"></path>
+    <path d="M4 6v12"></path>
+    <path d="M12 6v12"></path>
+    <path d="M11 18h2"></path>
+    <path d="M3 18h2"></path>
+    <path d="M4 12h8"></path>
+    <path d="M3 6h2"></path>
+    <path d="M11 6h2"></path>
+  </svg>
+);

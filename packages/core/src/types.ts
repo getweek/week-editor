@@ -17,7 +17,6 @@ export interface IPlugin {
     props: RenderElementProps,
     editor: Editor
   ): ReactElement | null;
-  getElements?(): (LeafElement | BlockElement)[];
 }
 
 export interface IPluginHandlers {
@@ -36,6 +35,7 @@ type Shortcut = {
 
 export type Command = {
   title: string;
+  action(editor: Editor): void;
   group?: string;
   icon?: ReactNode;
   aliases?: string[];
