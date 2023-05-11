@@ -1,11 +1,13 @@
-import { IPlugin } from '../../../core/src/types';
-import { Editor, Transforms, Node } from 'slate';
-import { RenderElementProps } from 'slate-react';
-import { ListType } from './types';
+import React from 'react';
+import { ChangeMatch, FullEditor, IPlugin } from '../../../core/src/types';
+import { Editor, Transforms, Node, Element } from 'slate';
+import { ReactEditor, RenderElementProps } from 'slate-react';
+import { ListType } from '../types';
+import { CustomElement } from '../global';
 import styles from './styles.module.css';
 
 export class ListsPlugin implements IPlugin {
-  init(editor: Editor) {
+  init(editor: FullEditor) {
     const { normalizeNode } = editor;
 
     editor.normalizeNode = (entry) => {
@@ -26,7 +28,7 @@ export class ListsPlugin implements IPlugin {
       }
 
       if (isListItem(editor, node)) {
-        Node
+        Node;
       }
 
       normalizeNode(entry);
@@ -35,22 +37,30 @@ export class ListsPlugin implements IPlugin {
     return editor;
   }
 
-  renderElement(props: RenderElementProps) {
-    const { element, attributes, children } = props;
+  elements = [
+    getListElement(ListType.BULLETED_LIST),
+    getListElement(ListType.NUMBERED_LIST),
+    {
+      type: ListType.LIST_ITEM,
+      isLeaf: false as const,
+      render(props: RenderElementProps) {
+        const { element, attributes, children } = props;
 
-    switch (element.type) {
-      case ListType.BULLETED_LIST:
-        return <ul {...attributes}>{children}</ul>;
-      case ListType.NUMBERED_LIST:
-        return <ol {...attributes}>{children}</ol>;
-      case ListType.LIST_ITEM:
-        return (
-          <li className={styles.listItem} {...attributes}>
-            {children}
-          </li>
-        );
-    }
-  }
+        switch (element.type) {
+          case ListType.LIST_ITEM:
+            return (
+              <li className={styles.listItem} {...attributes}>
+                {children}
+              </li>
+            );
+          default: {
+            return null;
+          }
+        }
+      },
+    },
+  ];
+
   shortcuts = [
     {
       trigger: ' ',
@@ -65,12 +75,31 @@ export class ListsPlugin implements IPlugin {
   ];
 }
 
-const turnInto = (type: ListType) => (editor: Editor, match) => {
+const getListElement = (type: ListType) => ({
+  type,
+  isLeaf: false as const,
+  hasPlaceholder: false,
+  render(props: RenderElementProps) {
+    const { element, attributes, children } = props;
+
+    switch (element.type) {
+      case ListType.BULLETED_LIST:
+        return <ul className={styles.list} {...attributes}>{children}</ul>;
+      case ListType.NUMBERED_LIST:
+        return <ol className={styles.list} {...attributes}>{children}</ol>;
+      default: {
+        return null;
+      }
+    }
+  },
+});
+
+const turnInto = (type: ListType) => (editor: Editor, match: ChangeMatch) => {
   const { selection } = editor;
 
   Transforms.delete(editor, {
     at: selection?.focus,
-    distance: match.before[0].length,
+    distance: match.before?.[0].length,
     reverse: true,
     unit: 'character',
   });
@@ -97,9 +126,8 @@ const LIST_TYPES = [ListType.BULLETED_LIST, ListType.NUMBERED_LIST];
 
 const LIST_ITEMS = [ListType.LIST_ITEM];
 
-const isList = (editor: Editor, node: Node): node is Element =>
-  Editor.isBlock(editor, node) && LIST_TYPES.includes(node.type);
+const isList = (editor: Editor, node: Node): boolean =>
+  Element.isElement(node) && LIST_TYPES.includes(node.type);
 
-export const isListItem = (editor: Editor, node: Node): node is Element =>
-  Editor.isBlock(editor, node) && LIST_ITEMS.includes(node.type);
-
+export const isListItem = (editor: Editor, node: Node): boolean =>
+  Element.isElement(node) && LIST_ITEMS.includes(node.type);

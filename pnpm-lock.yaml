@@ -178,12 +178,16 @@ importers:
 
   packages/plugins/ListsPlugin:
     specifiers:
+      '@types/react': ^18.0.34
+      '@types/react-dom': ^18.0.11
       react: ^18.2.0
       react-dom: ^18.2.0
       slate: ^0.93.0
       slate-hyperscript: ^0.77.0
       slate-react: ^0.93.0
     devDependencies:
+      '@types/react': 18.0.34
+      '@types/react-dom': 18.0.11
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       slate: 0.93.0

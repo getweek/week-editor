@@ -1,14 +1,14 @@
-import React, { ReactNode, useState, useRef, useEffect } from 'react';
-import { BaseElement, Editor, Node, Range } from 'slate';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Editor, Node } from 'slate';
 import {
   ReactEditor,
   RenderElementProps,
-  useSelected,
   useReadOnly,
+  useSelected,
 } from 'slate-react';
+import { create } from 'zustand';
 import { FullEditor, IPlugin } from '../../types';
 import { Menu } from './Menu';
-import { create } from 'zustand';
 import styles from './styles.module.css';
 
 type Store = {
@@ -37,7 +37,7 @@ export class CommandsPlugin implements IPlugin {
   init(editor: FullEditor) {
     const { onChange, insertText } = editor;
 
-    editor.insertText = (text) => {
+    editor.insertText = (text: string) => {
       if (text === '/') {
         useCommands.setState({ isOpen: true });
       }
@@ -62,7 +62,7 @@ export class CommandsPlugin implements IPlugin {
     return editor;
   }
 
-  renderElement(props: RenderElementProps, editor: ReactEditor) {
+  renderElement(props: RenderElementProps, editor: Editor & ReactEditor) {
     const isSelected = useSelected();
     const isReadOnly = useReadOnly();
     const ref = useRef<HTMLDivElement>(null);
@@ -75,6 +75,19 @@ export class CommandsPlugin implements IPlugin {
       mode: 'lowest',
     });
 
+    const ignoreList = useMemo(() => {
+      return this.options.plugins.reduce((ignoreList, plugin) => {
+        (plugin.elements || []).forEach((element) => {
+          if (element.hasPlaceholder === false) {
+            ignoreList.push(element.type);
+          }
+        });
+
+        return ignoreList;
+      }, [] as string[]);
+    }, []);
+
+    const isIgnored = ignoreList.includes(props.element.type);
     const isEmpty = !entity || Node.string(entity[0]) === '';
 
     useEffect(() => {
@@ -88,7 +101,7 @@ export class CommandsPlugin implements IPlugin {
       }
     }, [isOpen]);
 
-    if (editor.isInline(props.element)) {
+    if (editor.isInline(props.element) || isIgnored) {
       return props.children;
     }
 
@@ -114,7 +127,7 @@ export class CommandsPlugin implements IPlugin {
 
 const getCurrentText = (editor: Editor) => {
   const entry = Editor.above(editor, {
-    match: (n) => Editor.isBlock(editor, n),
+    match: (n: Node) => Editor.isBlock(editor, n),
   });
 
   if (entry) {

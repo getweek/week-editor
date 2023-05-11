@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ReactEditor, RenderElementProps } from 'slate-react';
 import { DndProvider, useDrag, useDrop, XYCoord } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';

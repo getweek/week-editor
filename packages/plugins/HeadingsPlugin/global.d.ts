@@ -1,7 +1,6 @@
 import { BaseElement, Text } from 'slate';
 import { HeadingType } from './types';
 
-
 interface H1 extends BaseElement {
   type: HeadingType.H1;
   children: Text;

@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/react": "^18.0.34",
+    "@types/react-dom": "^18.0.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "slate": "^0.93.0",
@@ -17,6 +19,8 @@
     "slate-react": "^0.93.0"
   },
   "peerDependencies": {
+    "@types/react": "^18.0.34",
+    "@types/react-dom": "^18.0.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "slate": "^0.93.0",

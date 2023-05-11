@@ -1,76 +1,19 @@
 import React, { RenderElementProps } from 'slate-react';
 import { Editor, Transforms, Node } from 'slate';
 import { jsx } from 'slate-hyperscript';
-import { ChangeMatch, IPlugin, Serialize } from '../../../core/src/types';
+import {
+  ChangeMatch,
+  CommandActionType,
+  IPlugin,
+  Serialize,
+} from '../../../core/src/types';
 import { HeadingType } from '../types';
 
 export class HeadingsPlugin implements IPlugin {
   elements = [
-    {
-      isLeaf: false as const,
-      render(props: RenderElementProps) {
-        const { element, attributes, children } = props;
-
-        switch (element.type) {
-          case HeadingType.H1:
-            return <h1 {...attributes}>{children}</h1>;
-          case HeadingType.H2:
-            return <h2 {...attributes}>{children}</h2>;
-          case HeadingType.H3:
-            return <h3 {...attributes}>{children}</h3>;
-          default:
-            return null;
-        }
-      },
-      serialize(node: Node, serialize: Serialize) {
-        if ('type' in node) {
-          switch (node.type) {
-            case HeadingType.H1:
-              return `<h1>${serialize(node.children, serialize)}</h1>`;
-            case HeadingType.H2:
-              return `<h2>${serialize(node.children, serialize)}</h2>`;
-            case HeadingType.H3:
-              return `<h3>${serialize(node.children, serialize)}</h3>`;
-          }
-        }
-      },
-
-      deserialize(element: HTMLElement, children: any[]) {
-        const { nodeName } = element;
-
-        switch (nodeName) {
-          case 'H1':
-            return jsx('element', { type: HeadingType.H1 }, children);
-          case 'H2':
-            return jsx('element', { type: HeadingType.H2 }, children);
-          case 'H3':
-            return jsx('element', { type: HeadingType.H3 }, children);
-        }
-      },
-      commands: [
-        {
-          title: 'Heading 1',
-          group: 'Headings',
-          icon: heading1Icon,
-          action: (editor: Editor) =>
-            Transforms.setNodes(editor, { type: HeadingType.H1 }),
-        },
-        {
-          title: 'Heading 2',
-          group: 'Headings',
-          icon: heading2Icon,
-          action: (editor: Editor) =>
-            Transforms.setNodes(editor, { type: HeadingType.H2 }),
-        },
-        {
-          title: 'Heading 3',
-          group: 'Headings',
-          icon: heading3Icon,
-          action: (editor: Editor) =>
-            Transforms.setNodes(editor, { type: HeadingType.H3 }),
-        },
-      ],
-    },
+    getElement(HeadingType.H1),
+    getElement(HeadingType.H2),
+    getElement(HeadingType.H3),
   ];
 
   shortcuts = [
@@ -91,6 +34,58 @@ export class HeadingsPlugin implements IPlugin {
     },
   ];
 }
+
+const getElement = (type: HeadingType) => ({
+  type,
+  isLeaf: false as const,
+  render(props: RenderElementProps) {
+    const { element, attributes, children } = props;
+
+    switch (element.type) {
+      case HeadingType.H1:
+        return <h1 {...attributes}>{children}</h1>;
+      case HeadingType.H2:
+        return <h2 {...attributes}>{children}</h2>;
+      case HeadingType.H3:
+        return <h3 {...attributes}>{children}</h3>;
+      default:
+        return null;
+    }
+  },
+  serialize(node: Node, serialize: Serialize) {
+    if ('type' in node) {
+      switch (node.type) {
+        case HeadingType.H1:
+          return `<h1>${serialize(node.children, serialize)}</h1>`;
+        case HeadingType.H2:
+          return `<h2>${serialize(node.children, serialize)}</h2>`;
+        case HeadingType.H3:
+          return `<h3>${serialize(node.children, serialize)}</h3>`;
+      }
+    }
+  },
+
+  deserialize(element: HTMLElement, children: any[]) {
+    const { nodeName } = element;
+
+    switch (nodeName) {
+      case 'H1':
+        return jsx('element', { type: HeadingType.H1 }, children);
+      case 'H2':
+        return jsx('element', { type: HeadingType.H2 }, children);
+      case 'H3':
+        return jsx('element', { type: HeadingType.H3 }, children);
+    }
+  },
+  commands: [
+    {
+      title: headings[type].title,
+      group: 'Headings',
+      icon: headings[type].icon,
+      action: CommandActionType.replace,
+    },
+  ],
+});
 
 const turnInto =
   (type: HeadingType) => (editor: Editor, match: ChangeMatch) => {
@@ -185,3 +180,18 @@ const heading3Icon = (
     <path d="M11 6h2"></path>
   </svg>
 );
+
+const headings = {
+  [HeadingType.H1]: {
+    title: 'Heading 1',
+    icon: heading1Icon,
+  },
+  [HeadingType.H2]: {
+    title: 'Heading 1',
+    icon: heading2Icon,
+  },
+  [HeadingType.H3]: {
+    title: 'Heading 1',
+    icon: heading3Icon,
+  },
+};

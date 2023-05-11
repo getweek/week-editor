@@ -1,10 +1,11 @@
+import React from 'react';
 import { Editor } from 'slate';
 import { create } from 'zustand';
-import { RenderElementProps } from '../../../core/node_modules/slate-react/dist';
-import { IElement, IUi } from '../../../core/src/types';
-import { Link } from './Link';
+import { IPlugin } from '../../../core/src/types';
 import { Menu } from './Menu';
 import { ELEMENT_LINK } from './types';
+import { RenderElementProps } from 'slate-react';
+import { Link } from './Link';
 
 export const useLinksState = create((set) => ({
   isOpen: false,
@@ -14,7 +15,7 @@ export const useLinksState = create((set) => ({
   close: () => set({ isOpen: false, box: null, link: '' }),
 }));
 
-export class LinksPlugin implements IUi, IElement {
+export class LinksPlugin implements IPlugin {
   ui({ readOnly }) {
     const isOpen = useLinksState((state) => state.isOpen);
     const open = useLinksState((state) => state.open);
@@ -33,11 +34,20 @@ export class LinksPlugin implements IUi, IElement {
     );
   }
 
-  renderElement(props: RenderElementProps) {
-    if (props.element.type === ELEMENT_LINK) {
-      return <Link {...props} />;
-    }
-  }
+  elements = [
+    {
+      type: ELEMENT_LINK,
+      isLeaf: false as const,
+      isInline: true,
+      render(props: RenderElementProps) {
+        if (props.element.type === ELEMENT_LINK) {
+          return <Link {...props} />;
+        }
+
+        return null;
+      },
+    },
+  ];
 
   init(editor: Editor) {
     const { isInline } = editor;

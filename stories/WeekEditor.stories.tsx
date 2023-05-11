@@ -1,3 +1,4 @@
+import React, { useMemo, useState } from 'react';
 import { useFocused } from 'slate-react';
 import cn from 'classnames';
 import { BaseElement } from '../packages/core/src/types';
@@ -15,16 +16,10 @@ import { LinksPlugin, useLinksState } from '@week/links-plugin';
 import { SoftBreakPlugin } from '@week/soft-break-plugin';
 import { HeadingsPlugin, HeadingType } from '@week/headings-plugin';
 import { ListsPlugin, ListType } from '@week/lists-plugin';
-import { CommandsPlugin } from '@week/commands-plugin';
-import { useMemo, useState } from 'react';
 import { Editor, Descendant, Range, Transforms } from 'slate';
 import { WeekEditor } from '../packages/core/src/WeekEditor';
 
 import styles from './styles.module.css';
-import { paragraph } from '../packages/core/src/icons/paragraph';
-import { heading1 } from '../packages/core/src/icons/heading1';
-import { heading2 } from '../packages/core/src/icons/heading2';
-import { heading3 } from '../packages/core/src/icons/heading3';
 
 const boldIcon = (
   <svg
@@ -187,32 +182,6 @@ const floatingUiOptions = {
   },
 };
 
-const commands = [
-  {
-    icon: <>{paragraph}</>,
-    title: 'Paragraph',
-    action: (editor: Editor) =>
-      Transforms.setNodes(editor, { type: BaseElement }),
-  },
-  {
-    icon: heading1,
-    title: 'Heading 1',
-    action: (editor: Editor) =>
-      Transforms.setNodes(editor, { type: HeadingType.H1 }),
-  },
-  {
-    icon: heading2,
-    title: 'Heading 2',
-    action: (editor: Editor) =>
-      Transforms.setNodes(editor, { type: HeadingType.H2 }),
-  },
-  {
-    icon: heading3,
-    title: 'Heading 3',
-    action: (editor: Editor) =>
-      Transforms.setNodes(editor, { type: HeadingType.H3 }),
-  },
-];
 
 export default {
   title: 'WeekEditor',
@@ -230,9 +199,6 @@ export const Primary = {
         new LinksPlugin(),
         new HeadingsPlugin(),
         new ListsPlugin(),
-        // new CommandsPlugin({
-        //   commands,
-        // }),
         new DnDPlugin({
           ignore: [ListType.BULLETED_LIST, ListType.NUMBERED_LIST],
         }),

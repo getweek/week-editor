@@ -35,11 +35,16 @@ type Shortcut = {
 
 export type Command = {
   title: string;
-  action(editor: Editor): void;
+  action: CommandActionType;
   group?: string;
   icon?: ReactNode;
   aliases?: string[];
 };
+
+export enum CommandActionType {
+  append,
+  replace
+}
 
 export type ChangeMatch = {
   before?: RegExpExecArray;
@@ -52,18 +57,20 @@ type UiParams = {
   readOnly: boolean;
 };
 
-type WeekElement = {
-  isVoid?: boolean;
-  isInline?: boolean;
-  serialize?: Serialize;
-  deserialize?(element: any, children: any): any;
-  commands?: Array<Command>;
-};
-
 export type Serialize = (
   node: Node,
   serialize: Serialize
 ) => string | undefined;
+
+type WeekElement = {
+  readonly type: string;
+  readonly isVoid?: boolean;
+  readonly isInline?: boolean;
+  readonly hasPlaceholder?: boolean;
+  serialize?: Serialize;
+  deserialize?(element: any, children: any): any;
+  commands?: Array<Command>;
+};
 
 type LeafElement = {
   isLeaf: true;
