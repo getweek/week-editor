@@ -110,7 +110,9 @@ export class CommandsPlugin implements IPlugin {
       <>
         <span {...props.attributes}>
           <span
-            className={isEmpty && isSelected && !isReadOnly && styles.absolute}
+            className={
+              isEmpty && isSelected && !isReadOnly ? styles.absolute : undefined
+            }
           >
             {props.children}
           </span>
