@@ -3,6 +3,7 @@ import { Editor, Node } from 'slate';
 import {
   ReactEditor,
   RenderElementProps,
+  RenderLeafProps,
   useReadOnly,
   useSelected,
 } from 'slate-react';
@@ -62,7 +63,7 @@ export class CommandsPlugin implements IPlugin {
     return editor;
   }
 
-  renderElement(props: RenderElementProps, editor: Editor & ReactEditor) {
+  renderLeaf(props: RenderLeafProps, editor: Editor & ReactEditor) {
     const isSelected = useSelected();
     const isReadOnly = useReadOnly();
     const ref = useRef<HTMLDivElement>(null);
@@ -87,7 +88,7 @@ export class CommandsPlugin implements IPlugin {
       }, [] as string[]);
     }, []);
 
-    const isIgnored = ignoreList.includes(props.element.type);
+    // const isIgnored = ignoreList.includes(props.element.type);
     const isEmpty = !entity || Node.string(entity[0]) === '';
 
     useEffect(() => {
@@ -101,22 +102,25 @@ export class CommandsPlugin implements IPlugin {
       }
     }, [isOpen]);
 
-    if (editor.isInline(props.element) || isIgnored) {
-      return props.children;
-    }
+    // if (editor.isInline(props.element) || isIgnored) {
+    //   return props.children;
+    // }
 
     return (
       <>
-        <div
-          ref={ref}
-          className={
-            isEmpty && isSelected && !isReadOnly
-              ? styles.hasPlaceholder
-              : undefined
-          }
-        >
-          {props.children}
-        </div>
+        <span {...props.attributes}>
+          <span
+            className={isEmpty && isSelected && !isReadOnly && styles.absolute}
+          >
+            {props.children}
+          </span>
+          {isEmpty && isSelected && !isReadOnly && (
+            <span className={styles.placeholder} contentEditable={false}>
+              Type "/" to add a block
+            </span>
+          )}
+        </span>
+
         {isOpen && isSelected && box && (
           <Menu options={this.options} box={box} onClose={close} />
         )}

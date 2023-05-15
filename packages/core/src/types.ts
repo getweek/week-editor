@@ -17,6 +17,7 @@ export interface IPlugin {
     props: RenderElementProps,
     editor: Editor
   ): ReactElement | null;
+  renderLeaf?(props: RenderLeafProps, editor: Editor): ReactElement | null;
 }
 
 export interface IPluginHandlers {
@@ -43,7 +44,7 @@ export type Command = {
 
 export enum CommandActionType {
   append,
-  replace
+  replace,
 }
 
 export type ChangeMatch = {

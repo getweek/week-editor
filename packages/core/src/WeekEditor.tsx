@@ -101,6 +101,14 @@ export const WeekEditor = (props: Props) => {
         });
       }
 
+      for (const plugin of plugins) {
+        if (plugin.renderLeaf) {
+          const newElement = plugin.renderLeaf(props, editor);
+
+          result = newElement || result;
+        }
+      }
+
       return result || <span {...props.attributes}>{props.children}</span>;
     };
 
