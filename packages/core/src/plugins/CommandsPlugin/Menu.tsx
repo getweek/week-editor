@@ -8,7 +8,7 @@ import { Command } from '../../types';
 import styles from './styles.module.css';
 
 type Props = {
-  box: DOMRect;
+  box: DOMRect | null;
   options: Options;
   onClose(): void;
 };
@@ -38,12 +38,15 @@ export const Menu = ({ box, options, onClose }: Props) => {
   }, [filter]);
 
   const style = useMemo(
-    () => ({
-      left: `${box?.left}px`,
-      top: `${box?.top + box?.height}px`,
-      opacity: 1,
-      transform: 'scale(1)',
-    }),
+    () =>
+      box
+        ? {
+            left: `${box?.left}px`,
+            top: `${box?.top + box?.height}px`,
+            opacity: 1,
+            transform: 'scale(1)',
+          }
+        : null,
     [box]
   );
 

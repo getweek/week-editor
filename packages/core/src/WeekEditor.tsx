@@ -47,7 +47,7 @@ export const WeekEditor = (props: Props) => {
     const baseEditor = withReact(withHistory(createEditor()));
 
     const editorWithPlugins = [withShortcuts].reduce((editor, plugin) => {
-      return plugin(plugins)(baseEditor);
+      return plugin(plugins)(editor);
     }, baseEditor);
 
     return plugins.reduce((prev, plugin) => {

@@ -66,45 +66,12 @@ export class CommandsPlugin implements IPlugin {
   renderLeaf(props: RenderLeafProps, editor: Editor & ReactEditor) {
     const isSelected = useSelected();
     const isReadOnly = useReadOnly();
-    const ref = useRef<HTMLDivElement>(null);
-    const [box, setBox] = useState<DOMRect | null>(null);
-    const isOpen = useCommands((state) => state.isOpen);
-    const open = useCommands((state) => state.open);
-    const close = useCommands((state) => state.close);
 
     const entity = Editor.above(editor, {
       mode: 'lowest',
     });
 
-    const ignoreList = useMemo(() => {
-      return this.options.plugins.reduce((ignoreList, plugin) => {
-        (plugin.elements || []).forEach((element) => {
-          if (element.hasPlaceholder === false) {
-            ignoreList.push(element.type);
-          }
-        });
-
-        return ignoreList;
-      }, [] as string[]);
-    }, []);
-
-    // const isIgnored = ignoreList.includes(props.element.type);
     const isEmpty = !entity || Node.string(entity[0]) === '';
-
-    useEffect(() => {
-      if (isOpen) {
-        const box = ref.current?.getBoundingClientRect();
-
-        if (box) {
-          setBox(box);
-          open();
-        }
-      }
-    }, [isOpen]);
-
-    // if (editor.isInline(props.element) || isIgnored) {
-    //   return props.children;
-    // }
 
     return (
       <>
@@ -122,11 +89,40 @@ export class CommandsPlugin implements IPlugin {
             </span>
           )}
         </span>
+      </>
+    );
+  }
 
-        {isOpen && isSelected && box && (
+  renderElement(props: RenderElementProps, editor: Editor) {
+    const ref = useRef<HTMLDivElement>(null);
+
+    const isOpen = useCommands((state) => state.isOpen);
+    const isSelected = useSelected();
+    const isReadOnly = useReadOnly();
+    const open = useCommands((state) => state.open);
+    const close = useCommands((state) => state.close);
+    const [box, setBox] = useState<DOMRect | null>(null);
+
+    console.log(isOpen);
+
+    useEffect(() => {
+      if (isOpen) {
+        const box = ref.current?.getBoundingClientRect();
+
+        if (box) {
+          setBox(box);
+          open();
+        }
+      }
+    }, [isOpen]);
+
+    return (
+      <div ref={ref}>
+        {props.children}
+        {isOpen && isSelected && (
           <Menu options={this.options} box={box} onClose={close} />
         )}
-      </>
+      </div>
     );
   }
 }
